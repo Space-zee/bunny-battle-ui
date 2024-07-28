@@ -1,0 +1,67 @@
+@import "@/styles/variables";
+
+.main {
+  justify-content: center;
+  padding: 36px 16px 0 16px;
+  font-family: $font-poppins;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 48px;
+}
+
+.name {
+  color: $pink-400;
+}
+
+.wrapper {
+  margin-top: 24px;
+  width: 100%;
+}
+
+.whiteHeader {
+  font-size: 16px;
+  font-weight: 500;
+  color: $gray-500;
+}
+
+.input {
+  margin-top: 8px;
+}
+
+.presetsWrapper {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.details {
+  margin-top: 20px;
+  background: $gray-800;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.detailsHeaderWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.detailsHeader {
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 4px;
+}
+
+.detailsDescription {
+  font-size: 14px;
+  font-weight: 400;
+  color: $gray-500;
+}

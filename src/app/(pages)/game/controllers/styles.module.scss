@@ -1,0 +1,52 @@
+@import "@/styles/variables";
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 16px 0 16px;
+  font-family: $font-poppins;
+}
+
+.headerWrapper {
+  margin-bottom: 24px;
+}
+
+.header {
+  font-size: 32px;
+  line-height: 48px;
+  padding-right: 6px;
+}
+
+.reloadIcon {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.namesPrizeWrapper {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.usenamesWrapper {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.swordEmoji {
+  font-size: 40px;
+  padding: 0 20px;
+}
+
+.prizeOf {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-600;
+}
+
+.prize{
+  font-size: 24px;
+  font-weight: 600;
+  color: $pink-300;
+}

@@ -1,0 +1,25 @@
+@import "@/styles/variables";
+
+.root {
+  height: 46px;
+  background: $gray-900;
+  width: 100%;
+  padding: 4px;
+  border-radius: 8px;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $gray-100;
+
+  &:hover{
+    cursor: pointer;
+    background: $primary-white;
+    color: $black;
+  }
+}
+
+.amount {
+  font-size: 16px;
+  font-weight: 600;
+}

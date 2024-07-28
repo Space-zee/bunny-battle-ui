@@ -1,0 +1,37 @@
+@import "@/styles/variables";
+
+.root {
+  background: $gray-950;
+  height: 77px;
+  border-radius: 8px;
+  color: $gray-400;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.set {
+  border: 2px solid $pink-400;
+}
+
+.verify {
+  border: 2px solid $error-800;
+}
+
+.opponentShot{
+  background: $gray-800;
+  border: 2px solid $pink-400;
+}
+
+.opponentDefault{
+  background: $gray-800;
+  border: 2px solid $gray-700;
+}
+
+
+.value {
+  align-self: center;
+  font-size: 24px;
+}

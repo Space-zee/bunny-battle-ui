@@ -1,5 +1,6 @@
 export enum CellStatusEnum {
   Default = "default",
+  Disabled = "disabled",
   Set = "set",
   Killed = "killed",
   Missed = "missed",

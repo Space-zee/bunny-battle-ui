@@ -36,6 +36,7 @@ export default function CreateController() {
     validateBet(value);
   };
   const onConfirm = async () => {
+    console.log("JWTBEFORE", jwtToken);
     const res = await $doCreateGame({ jwtToken, bet });
     if (res && res.success) {
       router.push(`/game/${res.data?.roomId}?token=${jwtToken}`);

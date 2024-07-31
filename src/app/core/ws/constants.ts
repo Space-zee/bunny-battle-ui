@@ -1,6 +1,7 @@
 export enum SocketEvents {
-  Connect = "connect",
-  Disconnect = "disconnect",
-  JoinRoom = "joinRoom",
+  JoinRoomClient = "joinRoomClient",
+  JoinRoomServer = "joinRoomServer",
   ReadyForBattle = "readyForBattle",
+  LeaveRoomClient = "leaveRoomClient",
+  LeaveRoomServer = "leaveRoomServer",
 }

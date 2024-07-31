@@ -1,7 +1,7 @@
 "use client";
 
 import s from "./styles.module.scss";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
@@ -13,7 +13,9 @@ import { UsernameBox } from "@/app/(pages)/game/components";
 import { socket } from "@/app/core/ws/socket";
 import { joinRoom } from "@/app/core/ws/handlers";
 import { SocketEvents } from "@/app/core/ws/constants";
-import { IReadyForBattle } from "@/app/core/ws/types";
+import { IJoinRoomRes, IReadyForBattle } from "@/app/core/ws/types";
+import { GameStatusEnum, IGame } from "../models";
+import { colors } from "@/app/shared/constants";
 
 export default function GameController() {
   const searchParams = useSearchParams();
@@ -22,26 +24,17 @@ export default function GameController() {
 
   const jwtToken = searchParams.get("token");
 
-  const [isConnected, setIsConnected] = useState(socket.connected);
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [game, setGame] = useAtom(gameModels.$game);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
-  const onConnect = () => {
-    setIsConnected(true);
-  };
-
-  const onDisconnect = () => {
-    setIsConnected(false);
-  };
 
   const onReadyForBattle = (data: IReadyForBattle) => {
-    console.log("data", data);
-    setGame(() => ({
+    setGame((prevState) => ({
+      ...prevState,
       isCreator:
         data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
-      myRabbits: [],
       bet: data.bet,
       opponent: {
         steps: [],
@@ -49,19 +42,60 @@ export default function GameController() {
           data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
             ? data.opponentName
             : data.creatorName,
+        isInRoom: true,
+      },
+      steps: [],
+    }));
+  };
+
+  const onCreateBattle = () => {};
+
+  const onLeaveRoom = () => {
+    setGame((prevState) => ({
+      ...prevState,
+      opponent: { isInRoom: false, steps: [] },
+    }));
+  };
+
+  const onJoinRoomRes = (data: IJoinRoomRes) => {
+    setGame((prevState) => ({
+      ...prevState,
+      isCreator:
+        data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
+      bet: data.bet,
+      opponent: {
+        steps: [],
+        userName: data.opponentName,
+        isInRoom: false,
       },
       steps: [],
     }));
   };
 
   useEffect(() => {
-    socket.on(SocketEvents.Connect, onConnect);
-    socket.on(SocketEvents.Disconnect, onDisconnect);
+    socket.on(`${SocketEvents.JoinRoomServer}:${roomId}`, onJoinRoomRes);
     socket.on(`${SocketEvents.ReadyForBattle}:${roomId}`, onReadyForBattle);
+    socket.on(`${SocketEvents.LeaveRoomServer}:${roomId}`, onLeaveRoom);
 
     return () => {
-      socket.off(SocketEvents.Connect, onConnect);
-      socket.off(SocketEvents.Disconnect, onDisconnect);
+      socket.off(`${SocketEvents.JoinRoomServer}:${roomId}`, onJoinRoomRes);
+      socket.off(`${SocketEvents.ReadyForBattle}:${roomId}`, onReadyForBattle);
+      socket.off(`${SocketEvents.LeaveRoomServer}:${roomId}`, onLeaveRoom);
+
+      socket.emit(SocketEvents.LeaveRoomClient, {
+        roomId,
+        telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
+      });
+      setGame({
+        myRabbits: [],
+        steps: [],
+        status: GameStatusEnum.RabbitsSet,
+        isScCreated: false,
+        opponent: {
+          steps: [],
+          isInRoom: false,
+        },
+      });
     };
   }, []);
 
@@ -69,20 +103,62 @@ export default function GameController() {
     $doLoadWebApp();
     if (TgButtons) {
       TgButtons.showBackButton(() => {
-        router.push("/games");
+        router.push(`/games?token=${jwtToken}`);
       });
     }
+
     joinRoom({
       roomId,
       telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
     });
-  }, []);
+  }, [WebApp]);
 
+  useEffect(() => {
+    if (game) {
+      TgButtons?.showMainButton(onCreateBattle, {
+        color: colors.pink400,
+        text_color: colors.black,
+        text: `Sent ${game.bet}`,
+        is_active: false,
+      });
+    }
+  }, [game.bet]);
+
+  useEffect(() => {
+    if (game.status === GameStatusEnum.RabbitsSet) {
+      if (game.isCreator) {
+        if (game.isScCreated) {
+          TgButtons?.showMainButton(onCreateBattle, {
+            color: colors.pink400,
+            text_color: colors.black,
+            text: "Verify and shot with Sign",
+            is_active: false,
+          });
+        } else {
+          TgButtons?.showMainButton(onCreateBattle, {
+            color: colors.pink400,
+            text_color: colors.black,
+            text: `Sent ${game.bet}`,
+            is_active: game.opponent.isInRoom,
+          });
+        }
+      } else {
+        TgButtons?.showMainButton(onCreateBattle, {
+          color: colors.pink400,
+          text_color: colors.black,
+          text: `Sent ${game.bet}`,
+          is_active: game.isScCreated,
+        });
+      }
+    }
+  }, [game.isScCreated, game.opponent]);
+
+  const prizePool = Number(game?.bet) + Number(game?.bet) * 0.99;
   return (
     <main className={s.main}>
       <Box className={s.headerWrapper}>
         <Text className={s.header} weight="bold">
-          Combat lobby
+          BunnyBattle
         </Text>
         <Image
           src={"/reload.svg"}
@@ -114,14 +190,16 @@ export default function GameController() {
           </Text>
           <UsernameBox
             isActive={false}
-            username={game ? game.opponent.userName : "opponent"}
+            username={
+              game?.opponent?.userName ? game.opponent.userName : "opponent"
+            }
             isUser={false}
           />
         </Flex>
         <Text className={s.prizeOf}>for prize of</Text>
-        <Text className={s.prize}>0.0002 ETH</Text>
+        <Text className={s.prize}>{prizePool} ETH</Text>
       </Flex>
-      <Field />
+      <Field game={game as IGame} onChangeGame={setGame} />
     </main>
   );
 }

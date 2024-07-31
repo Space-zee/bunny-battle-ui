@@ -23,7 +23,7 @@ export const Game = ({ game, onClick, webApp }: GameProps) => {
         <Text className={s.emoji}>⚔</Text>{" "}
         <Text className={s.bet}>{game.bet} ETH</Text>
         <Button onClick={onClick} className={s.button}>
-          Fight
+          {isUserGame ? "Back to my battle" : "Fight"}
         </Button>
       </Flex>
     </Flex>

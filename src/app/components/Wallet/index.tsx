@@ -23,7 +23,9 @@ export const Wallet = ({ wallet }: WalletProps) => {
       />{" "}
       <Text className={s.whiteText}>{formatAddress(wallet.wallet)} ⋅</Text>
       <Text className={s.grayText}>My balance</Text>{" "}
-      <Text className={s.whiteText}>{wallet.balance} ETH</Text>
+      <Text className={s.whiteText}>
+        {Number(wallet.balance).toFixed(5)} ETH
+      </Text>
     </Flex>
   );
 };

@@ -1,5 +1,5 @@
 import s from "./style.module.scss";
-import { Button, Grid } from "@radix-ui/themes";
+import { Grid } from "@radix-ui/themes";
 import { Cell } from "./Cell";
 import { IGame } from "@/app/(pages)/game/models";
 

@@ -32,10 +32,11 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
     // const moveByCoordinates = game.steps?.find((move) =>
     //   compareCoordinates(cellCoordinates, { x: move.x, y: move.y }),
     // );
+    console.log(game);
     if (game.status === GameStatusEnum.RabbitsSet) {
       if (!game.isScCreated) {
         if (
-          game.myRabbits.find((item) =>
+          game.myRabbits?.find((item) =>
             compareCoordinates(item, cellCoordinates),
           )
         ) {
@@ -43,7 +44,7 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
         }
       } else if (!game.isCreator) {
         if (
-          game.myRabbits.find((item) =>
+          game.myRabbits?.find((item) =>
             compareCoordinates(item, cellCoordinates),
           )
         ) {
@@ -95,16 +96,26 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
     }
 
     return CellStatusEnum.Disabled;
-  }, [game.myRabbits, game.status, game.currentStep, index]);
+  }, [game.myRabbits, game.status, game.currentStep, index, game.opponent]);
 
   const onClick = (index: number) => {
     if (game.status === GameStatusEnum.RabbitsSet) {
       const defaultBehaviour = () => {
-        if (game.myRabbits.length === 2) {
-          onChangeGame((prevState: IGame) => ({
-            ...prevState,
-            myRabbits: [prevState.myRabbits[1], gridIndexToCoordinates(index)],
-          }));
+        if (game.myRabbits?.length === 2) {
+          if (
+            !compareCoordinates(
+              game.myRabbits[1],
+              gridIndexToCoordinates(index),
+            )
+          ) {
+            onChangeGame((prevState: IGame) => ({
+              ...prevState,
+              myRabbits: [
+                prevState.myRabbits[1],
+                gridIndexToCoordinates(index),
+              ],
+            }));
+          }
         } else {
           onChangeGame((prevState: IGame) => ({
             ...prevState,

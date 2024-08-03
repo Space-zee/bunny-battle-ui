@@ -7,7 +7,7 @@ import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gameModels from "../models";
 import { Field } from "@/app/(pages)/game/components/Field";
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import { UsernameBox } from "@/app/(pages)/game/components";
 import { socket } from "@/app/core/ws/socket";
@@ -42,6 +42,7 @@ export default function GameController() {
     setGame((prevState) => ({
       ...prevState,
       status: GameStatusEnum.RabbitsSet,
+      myRabbits: [],
       isCreator:
         data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
       bet: data.bet,
@@ -78,6 +79,7 @@ export default function GameController() {
   const onJoinRoomRes = (data: IJoinRoomRes) => {
     setGame((prevState) => ({
       ...prevState,
+      myRabbits: [],
       isCreator:
         data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
       bet: data.bet,
@@ -115,8 +117,9 @@ export default function GameController() {
   };
 
   const onMove = () => {
-    console.log("game onMove", game);
+    console.log("game onMove Before", game);
     if (game.currentStep) {
+      TgButtons?.mainButton.showProgress();
       const data: IUserMoveReq = {
         roomId,
         telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
@@ -127,52 +130,60 @@ export default function GameController() {
       setGame((prevState) => ({
         ...prevState,
         steps: [
-          ...game.steps,
+          ...prevState.steps,
           {
-            x: game.currentStep!.x,
-            y: game.currentStep!.y,
+            x: prevState.currentStep!.x,
+            y: prevState.currentStep!.y,
             isHit: undefined,
           },
         ],
         currentStep: undefined,
       }));
-      TgButtons?.mainButton.showProgress();
     }
   };
 
-  const onClick = () => {
-    setGame((prevState) => ({
-      ...prevState,
-      currentStep: { y: 1, x: 2 },
-    }));
-
-    setGame((prevState) => ({
-      ...prevState,
-      steps: [
-        ...game.steps,
-        {
-          x: game.currentStep!.x,
-          y: game.currentStep!.y,
-          isHit: undefined,
-        },
-      ],
-      currentStep: undefined,
-    }));
-    console.log(game);
-  };
-
   const onServerUserMove = (data: IUserMoveRes) => {
+    console.log("data onServerUserMove", data);
+    console.log("game onServerUserMove", game);
+    TgButtons?.mainButton.hideProgress();
     if (data.lastMove) {
       if (data.telegramUserId !== (WebApp?.initDataUnsafe.user?.id as number)) {
-        const updated = updateLastElement(
-          game.steps,
-          data.lastMove.isHit as boolean,
-        );
+        setGame((prevState) => {
+          // Clone the steps array
+          const updatedSteps = [...prevState.steps];
+
+          // Update the last element's `isHit` property
+          if (updatedSteps.length > 0) {
+            const lastIndex = updatedSteps.length - 1;
+            updatedSteps[lastIndex] = {
+              ...updatedSteps[lastIndex], // Spread existing properties
+              isHit: data.lastMove?.isHit, // Update `isHit` property
+            };
+          }
+
+          return {
+            ...prevState,
+            steps: updatedSteps, // Set updated steps array
+          };
+        });
+      } else {
         setGame((prevState) => ({
           ...prevState,
-          steps: updated,
+          opponent: {
+            ...prevState.opponent,
+            steps: [
+              ...prevState.opponent.steps,
+              {
+                x: data.lastMove!.x,
+                y: data.lastMove!.y,
+                isHit: data.lastMove?.isHit,
+              },
+            ],
+          },
         }));
       }
+
+      console.log("game onServerUserMove", game);
     }
 
     if (data.telegramUserId === (WebApp?.initDataUnsafe.user?.id as number)) {
@@ -189,8 +200,10 @@ export default function GameController() {
   };
 
   const onWinner = (data: { address: string }) => {
+    TgButtons?.mainButton.hideProgress();
     const isWinner = userWallet?.wallet === data.address;
-    router.push(`/gameEnd?winner=${isWinner}`);
+    //router.push(`/gameEnd?winner=${isWinner}`);
+    console.log("winner", isWinner);
   };
 
   useEffect(() => {
@@ -254,6 +267,7 @@ export default function GameController() {
   }, [game.bet]);
 
   useEffect(() => {
+    console.log("onGameChange");
     if (game.status === GameStatusEnum.RabbitsSet) {
       if (game.isCreator) {
         if (game.isScCreated) {
@@ -280,7 +294,6 @@ export default function GameController() {
         });
       }
     } else if (game.status === GameStatusEnum.UserTurn) {
-      TgButtons?.mainButton.hideProgress();
       TgButtons?.showMainButton(onMove, {
         color: colors.pink400,
         text_color: colors.black,
@@ -288,7 +301,6 @@ export default function GameController() {
         is_active: true,
       });
     } else if (game.status === GameStatusEnum.OpponentTurn) {
-      TgButtons?.mainButton.hideProgress();
       TgButtons?.showMainButton(onMove, {
         color: colors.pink400,
         text_color: colors.black,
@@ -296,13 +308,7 @@ export default function GameController() {
         is_active: false,
       });
     }
-  }, [
-    game.isScCreated,
-    game.opponent,
-    game.myRabbits,
-    game.status,
-    game.currentStep,
-  ]);
+  }, [TgButtons, game, onCreateBattle, onMove]);
 
   const prizePool = Number(game?.bet) + Number(game?.bet) * 0.99;
   return (
@@ -350,7 +356,7 @@ export default function GameController() {
         <Text className={s.prizeOf}>for prize of</Text>
         <Text className={s.prize}>{prizePool} ETH</Text>
       </Flex>
-      <Button onClick={onClick}>Click</Button>
+
       <Field game={game as IGame} onChangeGame={setGame} />
     </main>
   );

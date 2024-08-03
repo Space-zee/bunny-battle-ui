@@ -32,7 +32,6 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
     // const moveByCoordinates = game.steps?.find((move) =>
     //   compareCoordinates(cellCoordinates, { x: move.x, y: move.y }),
     // );
-    console.log(game);
     if (game.status === GameStatusEnum.RabbitsSet) {
       if (!game.isScCreated) {
         if (

@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
 ];
 
 const BottomNavBar: React.FC = () => {
-  const [activeItemId, setActiveItemId] = useState<string | null>("2");
+  const [activeItemId, setActiveItemId] = useState<string | null>("null");
 
   const handleItemClick = (id: string) => {
     // setActiveItemId((prevId) => (prevId === id ? null : id));

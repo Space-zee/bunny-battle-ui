@@ -1,0 +1,10 @@
+@import "@/styles/variables";
+
+.SVGContainer {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: visible;
+  // border: 2.5px solid $gray-700;
+}

@@ -8,4 +8,7 @@ export const apiPaths = {
   createGame(): string {
     return "/createGame";
   },
+  getGameData(roomId: string): string {
+    return `/getGameData/${roomId}`;
+  },
 };

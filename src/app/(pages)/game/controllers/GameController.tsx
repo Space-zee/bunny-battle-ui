@@ -11,9 +11,9 @@ import { Box, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import { UsernameBox } from "@/app/(pages)/game/components";
 import { socket } from "@/app/core/ws/socket";
-import { joinRoom } from "@/app/core/ws/handlers";
 import { SocketEvents } from "@/app/core/ws/constants";
 import {
+  IJoinRoomReq,
   IJoinRoomRes,
   IRabbitsSetReq,
   IReadyForBattle,
@@ -24,7 +24,8 @@ import { GameStatusEnum, IGame } from "../models";
 import { colors } from "@/app/shared/constants";
 import Countdown from "react-countdown";
 import { Loader } from "@/app/components";
-import { TgStorageKeysEnum } from "@/app/shared/enums";
+import { RoomStatusServerEnum, TgStorageKeysEnum } from "@/app/shared/enums";
+import { ICoordinates } from "@/app/shared/types";
 
 export default function GameController() {
   const searchParams = useSearchParams();
@@ -38,6 +39,7 @@ export default function GameController() {
   const [TgStorage] = useAtom(coreModels.$tgStorage);
   const [userWallet] = useAtom(coreModels.$userWallet);
   const [game, setGame] = useAtom(gameModels.$game);
+  const $doLoadGameData = useSetAtom(gameModels.$doLoadGameData);
   const prizePool = Number(game?.bet) + Number(game?.bet) * 0.99;
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
@@ -54,7 +56,9 @@ export default function GameController() {
         steps: [],
         userName:
           data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
-            ? data.opponentName
+            ? data.isGameCreated
+              ? undefined
+              : data.opponentName
             : data.creatorName,
         isInRoom: true,
       },
@@ -78,30 +82,42 @@ export default function GameController() {
     TgButtons?.mainButton.showProgress();
   };
 
+  const joinRoom = (data: IJoinRoomReq) => {
+    socket.emit(SocketEvents.JoinRoomClient, data);
+  };
+
   const onLeaveRoom = () => {
     setGame((prevState) => ({
       ...prevState,
-      opponent: { isInRoom: false, steps: [] },
+      opponent: { ...prevState.opponent, isInRoom: false },
     }));
   };
 
   const onJoinRoomRes = async (data: IJoinRoomRes) => {
-    setGame({
-      moveDeadline: 0,
-      status: GameStatusEnum.RabbitsSet,
-      isScCreated: data.isGameCreated,
-      gameId: data.gameId,
-      myRabbits: [],
-      isCreator:
-        data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
-      bet: data.bet,
-      opponent: {
+    if (data.status === RoomStatusServerEnum.Active) {
+      setGame({
+        moveDeadline: 0,
+        status: GameStatusEnum.RabbitsSet,
+        isScCreated: data.isGameCreated,
+        gameId: data.gameId,
+        myRabbits: [],
+        isCreator:
+          data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
+        bet: data.bet,
+        opponent: {
+          steps: [],
+          userName: data.opponentName,
+          isInRoom: false,
+        },
         steps: [],
-        userName: data.opponentName,
-        isInRoom: false,
-      },
-      steps: [],
-    });
+      });
+    } else if (data.status === RoomStatusServerEnum.Game) {
+      if (data.telegramUserId === (WebApp?.initDataUnsafe.user?.id as number)) {
+        await $doLoadGameData({ jwtToken, roomId });
+      }
+    } else {
+      router.push(`/games?token=${jwtToken}`);
+    }
   };
 
   const onGameCreated = () => {
@@ -112,13 +128,26 @@ export default function GameController() {
     TgButtons?.mainButton.hideProgress();
   };
 
-  const onGameStarted = (data: { moveDeadline: number }) => {
+  const onGameStarted = async (data: {
+    moveDeadline: number;
+    opponentName: string;
+    creatorName: string;
+  }) => {
+    const myRabbits = (await TgStorage?.getInfo(
+      WebApp?.initDataUnsafe.user?.id as number,
+      TgStorageKeysEnum.UserRabbits,
+    )) as ICoordinates[];
     setGame((prevState) => ({
       ...prevState,
+      myRabbits,
       status: prevState.isCreator
         ? GameStatusEnum.UserTurn
         : GameStatusEnum.OpponentTurn,
       moveDeadline: data.moveDeadline,
+      opponent: {
+        ...prevState.opponent,
+        userName: prevState.isCreator ? data.opponentName : data.creatorName,
+      },
     }));
     TgButtons?.mainButton.hideProgress();
     TgButtons?.showMainButton(onMove, {
@@ -218,16 +247,11 @@ export default function GameController() {
   const onWinner = (data: { address: string }) => {
     TgButtons?.mainButton.hideProgress();
     const isWinner = userWallet?.wallet === data.address;
-    //router.push(`/gameEnd?winner=${isWinner}`);
-    console.log("winner", isWinner);
+    router.push(`/gameEnd?winner=${isWinner ? 1 : 0}&token=${jwtToken}`);
   };
 
   const onTimerComplete = async () => {
     if (game.status === GameStatusEnum.OpponentTurn) {
-      // const userRabbits = await TgStorage?.getInfo(
-      //   WebApp?.initDataUnsafe.user?.id as number,
-      //   TgStorageKeysEnum.UserRabbits,
-      // );
       socket.emit(SocketEvents.CheckDeadlineClient, {
         roomId,
         telegramUserId: WebApp?.initDataUnsafe.user?.id as number,

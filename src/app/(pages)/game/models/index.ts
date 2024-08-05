@@ -1,6 +1,9 @@
 import { atom } from "jotai/index";
 import { ICoordinates, ICoordinatesWithHit } from "@/app/shared/types";
-
+import { httpClient } from "@/app/core/httpClient";
+import { apiPaths } from "@/app/core/httpClient/apiPaths";
+import * as coreModels from "@/app/core/models";
+import { TgStorageKeysEnum } from "@/app/shared/enums";
 export enum GameStatusEnum {
   RabbitsSet = "rabbitsSet",
   UserTurn = "userTurn",
@@ -36,3 +39,67 @@ export const $game = atom<IGame>({
     steps: [],
   },
 });
+
+interface ILoadGameData {
+  gameId: number;
+  isCreator: boolean;
+  isScCreated: boolean;
+  userSteps: ICoordinatesWithHit[];
+  isUserTurn: boolean;
+  bet: string;
+  moveDeadline: number;
+  opponentName: string;
+  opponentSteps: ICoordinatesWithHit[];
+}
+
+export const $doLoadGameData = atom(
+  null,
+  async (get, set, args: { jwtToken: string | null; roomId: string }) => {
+    const { jwtToken, roomId } = args;
+    if (jwtToken) {
+      const response = await httpClient.get<ILoadGameData>(
+        apiPaths.getGameData(roomId),
+        jwtToken,
+      );
+      if (response.data) {
+        const tgStorage = get(coreModels.$tgStorage);
+        const webApp = get(coreModels.$webApp);
+        const userRabbits: ICoordinates[] = (await tgStorage?.getInfo(
+          webApp?.initDataUnsafe.user?.id as number,
+          TgStorageKeysEnum.UserRabbits,
+        )) as ICoordinates[];
+        const {
+          gameId,
+          isCreator,
+          userSteps,
+          isUserTurn,
+          moveDeadline,
+          bet,
+          opponentSteps,
+          opponentName,
+          isScCreated,
+        } = response.data;
+        set($game, {
+          gameId,
+          isCreator,
+          isScCreated,
+          steps: userSteps,
+          status: isUserTurn
+            ? GameStatusEnum.UserTurn
+            : GameStatusEnum.OpponentTurn,
+          myRabbits: userRabbits,
+          bet,
+          moveDeadline,
+          opponent: {
+            isInRoom: true,
+            steps: opponentSteps,
+            userName: opponentName,
+          },
+        });
+      } else {
+        //TODO:HAndle error
+        //set($globalError, { isOpen: true, description: "Unknown Error" });
+      }
+    }
+  },
+);

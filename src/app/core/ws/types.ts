@@ -1,4 +1,5 @@
 import { ICoordinates, ICoordinatesWithHit } from "@/app/shared/types";
+import { RoomStatusServerEnum } from "@/app/shared/enums";
 
 export interface IJoinRoomReq {
   roomId: string;
@@ -6,8 +7,10 @@ export interface IJoinRoomReq {
 }
 
 export interface IJoinRoomRes {
+  telegramUserId: number;
   gameId: number;
   isGameCreated: boolean;
+  status: RoomStatusServerEnum;
   bet: string;
   roomId: string;
   creatorName: string;

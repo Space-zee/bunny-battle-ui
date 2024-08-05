@@ -5,9 +5,12 @@ import { atom } from "jotai";
 import { httpClient } from "@/app/core/httpClient";
 import { IUserWallet } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
+import { TgStorage } from "@/app/shared/utils";
 
 export const $webApp = atom<WebAppTypes | null>(null);
 export const $tgButtons = atom<TgButtons | null>(null);
+export const $tgStorage = atom<TgStorage | null>(null);
+
 export const $userWallet = atom<IUserWallet | null>(null);
 
 export const $doLoadWebApp = atom(null, async (get, set) => {
@@ -16,6 +19,7 @@ export const $doLoadWebApp = atom(null, async (get, set) => {
     if (typeof window !== "undefined" && WebApp) {
       set($webApp, WebApp);
       set($tgButtons, new TgButtons(WebApp));
+      set($tgStorage, new TgStorage(WebApp));
     } else {
       set($webApp, null);
     }

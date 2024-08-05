@@ -66,7 +66,10 @@ export default function GamesController() {
           width={26}
           height={26}
           className={s.reloadIcon}
-          onClick={() => $doLoadActiveGames({ jwtToken })}
+          onClick={() => {
+            $doLoadActiveGames({ jwtToken });
+            $doLoadUserWallet({ jwtToken });
+          }}
         />
       </Box>
       <Switcher

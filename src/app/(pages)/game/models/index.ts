@@ -8,6 +8,8 @@ export enum GameStatusEnum {
 }
 
 export interface IGame {
+  gameId: number;
+  moveDeadline: number;
   isScCreated: boolean;
   status?: GameStatusEnum;
   isCreator?: boolean;
@@ -23,9 +25,11 @@ export interface IGame {
 }
 
 export const $game = atom<IGame>({
+  moveDeadline: 0,
+  gameId: 1,
   myRabbits: [],
   steps: [],
-  status: GameStatusEnum.RabbitsSet,
+  status: GameStatusEnum.UserTurn,
   isScCreated: false,
   opponent: {
     isInRoom: false,

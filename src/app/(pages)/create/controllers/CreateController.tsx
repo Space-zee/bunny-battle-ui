@@ -36,7 +36,6 @@ export default function CreateController() {
     validateBet(value);
   };
   const onConfirm = async () => {
-    console.log("JWTBEFORE", jwtToken);
     const res = await $doCreateGame({ jwtToken, bet });
     if (res && res.success) {
       router.push(`/game/${res.data?.roomId}?token=${jwtToken}`);
@@ -75,7 +74,10 @@ export default function CreateController() {
         color: colors.pink400,
         text_color: colors.black,
         text: "Confirm",
-        is_active: !error && Number(userWallet?.balance) > Number(bet),
+        is_active:
+          !error &&
+          Number(userWallet?.balance) > Number(bet) &&
+          Number(bet) !== 0,
       });
     }
   }, [error, bet]);

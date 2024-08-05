@@ -6,6 +6,7 @@ export interface IJoinRoomReq {
 }
 
 export interface IJoinRoomRes {
+  gameId: number;
   isGameCreated: boolean;
   bet: string;
   roomId: string;
@@ -15,6 +16,7 @@ export interface IJoinRoomRes {
 }
 
 export interface IReadyForBattle {
+  gameId: number;
   isGameCreated: boolean;
   bet: string;
   roomId: string;
@@ -37,6 +39,7 @@ export interface IUserMoveReq {
 }
 
 export interface IUserMoveRes {
+  moveDeadline: number;
   lastMove: ICoordinatesWithHit | null;
   telegramUserId: number;
 }

@@ -5,3 +5,4 @@ export * from "./Switcher";
 
 //icons
 export * from "./icons/QuestionMarkIcon";
+export * from "./icons/MaximizeIcon";

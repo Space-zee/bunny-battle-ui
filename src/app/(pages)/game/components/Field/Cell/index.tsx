@@ -156,7 +156,7 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
       justify="between"
       onClick={() => onClick(index)}
     >
-      <Box>{index}</Box>
+      <Box>{index + 1}</Box>
       <Box className={s.value}>{cellInnerConfig[cellState]}</Box>
       <Box />
     </Flex>

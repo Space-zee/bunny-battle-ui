@@ -1,6 +1,17 @@
+import { RoomStatusServerEnum } from "@/app/shared/enums";
+
 export interface IGetActiveGamesRes {
-  username: string;
+  status: RoomStatusServerEnum;
   bet: string;
   roomId: string;
-  creatorId: number;
+  creator: {
+    username?: string;
+    photo?: string;
+    telegramUserId: number;
+  };
+  joiner?: {
+    username?: string;
+    photo?: string;
+    telegramUserId: number;
+  };
 }

@@ -246,8 +246,7 @@ export default function GameController() {
 
   const onWinner = (data: { address: string }) => {
     TgButtons?.mainButton.hideProgress();
-    const isWinner = userWallet?.wallet === data.address;
-    router.push(`/gameEnd?winner=${isWinner ? 1 : 0}&token=${jwtToken}`);
+    router.push(`/gameEnd?roomId=${roomId}&token=${jwtToken}`);
   };
 
   const onTimerComplete = async () => {

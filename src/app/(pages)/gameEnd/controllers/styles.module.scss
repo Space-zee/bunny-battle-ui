@@ -9,59 +9,69 @@
   align-items: center;
 }
 
-.header {
+.headerWrapper {
+  text-align: center;
+}
+
+.resEmoji {
+  font-size: 64px;
+}
+
+.resHeader {
   font-size: 32px;
   font-weight: 700;
-  line-height: 48px;
 }
 
-.name {
-  color: $pink-400;
+.prizePoolWrapper {
+  text-align: center;
+  margin: 12px 0;
 }
 
-.wrapper {
-  margin-top: 24px;
-  width: 100%;
-}
-
-.whiteHeader {
+.youGot {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: $gray-500;
 }
 
-.input {
-  margin-top: 8px;
+.prizePool {
+  font-size: 32px;
+  font-weight: 600;
+  color: $pink-300;
 }
 
-.presetsWrapper {
+.gameIdHeader {
+  font-size: 20px;
+  font-weight: 500;
+  color: $gray-500;
+  margin-bottom: 12px;
+}
+
+.gameId {
+  font-weight: 700;
+}
+
+.txWrapper {
   width: 100%;
-  margin-top: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: $primary-white;
 }
 
-.details {
-  margin-top: 20px;
-  background: $gray-800;
-  padding: 12px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.detailsHeaderWrapper {
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.detailsHeader {
-  font-size: 14px;
-  font-weight: 500;
-  padding-left: 4px;
-}
-
-.detailsDescription {
-  font-size: 14px;
-  font-weight: 400;
+.firedIn {
   color: $gray-500;
+}
+
+.openTx {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.goToTxn {
+  font-size: 12px;
+  font-weight: 600;
+  color: $pink-500;
+  padding-right: 6px;
+
 }

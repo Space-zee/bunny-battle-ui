@@ -23,3 +23,20 @@ export const $doLoadActiveGames = atom(
     }
   },
 );
+
+export const $doDeleteGame = atom(
+  null,
+  async (get, set, args: { jwtToken: string | null; roomId: string }) => {
+    const { jwtToken, roomId } = args;
+    if (jwtToken) {
+      const response = await httpClient.post(apiPaths.deleteGame(), jwtToken, {
+        roomId,
+      });
+      if (response.success) {
+      } else {
+        //TODO:HAndle error
+        //set($globalError, { isOpen: true, description: "Unknown Error" });
+      }
+    }
+  },
+);

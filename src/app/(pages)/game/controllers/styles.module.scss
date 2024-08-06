@@ -12,6 +12,13 @@
   margin-bottom: 24px;
 }
 
+.gameId {
+  font-size: 32px;
+  font-weight: 700;
+  color: $pink-400;
+  padding: 0 4px;
+}
+
 .header {
   font-size: 32px;
   line-height: 48px;
@@ -27,6 +34,32 @@
 .namesPrizeWrapper {
   width: 100%;
   margin-bottom: 24px;
+}
+
+.timerWrapper {
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: 12px;
+}
+
+.turn {
+  font-size: 20px;
+  font-weight: 400;
+  color: $gray-500;
+}
+
+.timer {
+  padding: 8px 12px;
+  width: 70px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 45px;
+  background: $gray-900;
+  font-size: 20px;
+  font-weight: 600;
+  color: $pink-300;
 }
 
 .usenamesWrapper {
@@ -45,7 +78,7 @@
   color: $gray-600;
 }
 
-.prize{
+.prize {
   font-size: 24px;
   font-weight: 600;
   color: $pink-300;

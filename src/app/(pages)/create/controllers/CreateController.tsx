@@ -74,7 +74,10 @@ export default function CreateController() {
         color: colors.pink400,
         text_color: colors.black,
         text: "Confirm",
-        is_active: !error && Number(userWallet?.balance) > Number(bet),
+        is_active:
+          !error &&
+          Number(userWallet?.balance) > Number(bet) &&
+          Number(bet) !== 0,
       });
     }
   }, [error, bet]);

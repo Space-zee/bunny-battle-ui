@@ -9,10 +9,9 @@ import React from "react";
 
 type WalletProps = {
   wallet: IUserWallet;
-  onWithdraw: () => void;
 };
 
-export const Wallet = ({ wallet, onWithdraw }: WalletProps) => {
+export const Wallet = ({ wallet }: WalletProps) => {
   return (
     <Flex
       className={clsx(s.root, Number(wallet.balance) > 0 && s.active)}

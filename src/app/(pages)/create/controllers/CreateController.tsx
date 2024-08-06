@@ -28,7 +28,7 @@ export default function CreateController() {
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
   const onBack = () => {
-    router.back();
+    router.push(`/games?token=${jwtToken}`);
   };
 
   const onChange = (event: any) => {

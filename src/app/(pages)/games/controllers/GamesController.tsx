@@ -99,12 +99,7 @@ export default function GamesController() {
           />
         ))}
       </Flex>
-      {userWallet && (
-        <Wallet
-          onWithdraw={() => router.push(`/withdraw?token=${jwtToken}`)}
-          wallet={userWallet}
-        />
-      )}
+      {userWallet && <Wallet wallet={userWallet} />}
     </main>
   );
 }

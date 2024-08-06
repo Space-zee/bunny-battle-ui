@@ -1,20 +1,20 @@
 export const apiPaths = {
   getUserWallet(): string {
-    return "/getUserWallet";
+    return "/api/getUserWallet";
   },
   getActiveGames(): string {
-    return "/getActiveGames";
+    return "/api/getActiveGames";
   },
   createGame(): string {
-    return "/createGame";
+    return "/api/createGame";
   },
   deleteGame(): string {
-    return "/deleteGame";
+    return "/api/deleteGame";
   },
   getGameData(roomId: string): string {
-    return `/getGameData/${roomId}`;
+    return `/api/getGameData/${roomId}`;
   },
   getGameResult(roomId: string): string {
-    return `/getGameResult/${roomId}`;
+    return `/api/getGameResult/${roomId}`;
   },
 };

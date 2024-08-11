@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gamesModels from "../models";
-import { Text, Box, Flex } from "@radix-ui/themes";
+import { Text, Box, Flex, Button, Tabs } from "@radix-ui/themes";
 import Image from "next/image";
 import { colors } from "@/app/shared/constants";
 import { Wallet } from "@/app/components/Wallet";
@@ -28,9 +28,15 @@ export default function GamesController() {
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadUserWallet = useSetAtom(coreModels.$doLoadUserWallet);
   const $doLoadActiveGames = useSetAtom(gamesModels.$doLoadActiveGames);
+  const $doDeleteGame = useSetAtom(gamesModels.$doDeleteGame);
 
   const onCreateBattle = () => {
     router.push(`/create?token=${jwtToken}`);
+  };
+
+  const onDeleteGame = async (roomId: string) => {
+    await $doDeleteGame({ jwtToken, roomId });
+    $doLoadActiveGames({ jwtToken });
   };
 
   useEffect(() => {
@@ -66,7 +72,10 @@ export default function GamesController() {
           width={26}
           height={26}
           className={s.reloadIcon}
-          onClick={() => $doLoadActiveGames({ jwtToken })}
+          onClick={() => {
+            $doLoadActiveGames({ jwtToken });
+            $doLoadUserWallet({ jwtToken });
+          }}
         />
       </Box>
       <Switcher
@@ -83,7 +92,8 @@ export default function GamesController() {
             webApp={WebApp}
             key={index}
             game={el}
-            onClick={() => {
+            onDeleteGame={onDeleteGame}
+            onEnterGame={() => {
               router.push(`/game/${el.roomId}?token=${jwtToken}`);
             }}
           />

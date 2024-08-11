@@ -1,0 +1,77 @@
+@import "@/styles/variables";
+
+.main {
+  justify-content: center;
+  padding: 36px 16px 0 16px;
+  font-family: $font-poppins;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerWrapper {
+  text-align: center;
+}
+
+.resEmoji {
+  font-size: 64px;
+}
+
+.resHeader {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.prizePoolWrapper {
+  text-align: center;
+  margin: 12px 0;
+}
+
+.youGot {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-500;
+}
+
+.prizePool {
+  font-size: 32px;
+  font-weight: 600;
+  color: $pink-300;
+}
+
+.gameIdHeader {
+  font-size: 20px;
+  font-weight: 500;
+  color: $gray-500;
+  margin-bottom: 12px;
+}
+
+.gameId {
+  font-weight: 700;
+}
+
+.txWrapper {
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: $primary-white;
+}
+
+.firedIn {
+  color: $gray-500;
+}
+
+.openTx {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.goToTxn {
+  font-size: 12px;
+  font-weight: 600;
+  color: $pink-500;
+  padding-right: 6px;
+
+}

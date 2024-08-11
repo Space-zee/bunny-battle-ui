@@ -14,7 +14,7 @@ import { Game } from "@/app/(pages)/games/components/Game";
 import { Loader, Switcher } from "@/app/components";
 import { BotElement } from "@/app/components/bottomNav/molecule/BotElement";
 import { TopElement } from "@/app/components/bottomNav/molecule/TopElement";
-import { BottomNav } from "@/app/components/bottomNav/index";
+import { BottomNav } from "@/app/components/bottomNav";
 
 export default function GamesController() {
   const searchParams = useSearchParams();

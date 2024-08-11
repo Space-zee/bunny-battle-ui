@@ -27,8 +27,10 @@ const navItems: NavItem[] = [
   { id: "item3", alt: "My Profile", type: "avatar" },
 ];
 
-const BottomNavBar: React.FC = () => {
-  const [activeItemId, setActiveItemId] = useState<string | null>("null");
+export const TopElement: React.FC = () => {
+  const [activeItemId, setActiveItemId] = useState<string | null>(
+    navItems[1]?.id || null,
+  );
 
   const handleItemClick = (id: string) => {
     // setActiveItemId((prevId) => (prevId === id ? null : id));
@@ -53,11 +55,14 @@ const BottomNavBar: React.FC = () => {
   return (
     <Flex className={styles.bottomNavBar}>
       {navItems.map((item, index) => (
-        <Flex key={item.id} className={styles.navItemWrapper}>
+        <Flex
+          key={item.id}
+          className={styles.navItemWrapper}
+          onClick={() => handleItemClick(item.id)}
+        >
           <motion.div
             key={item.id}
             // className={styles.navItemWrapper}
-            onClick={() => handleItemClick(item.id)}
             whileTap={{ scale: 0.9 }}
           >
             {item.type === "lottie" && (
@@ -101,5 +106,3 @@ const BottomNavBar: React.FC = () => {
     </Flex>
   );
 };
-
-export default BottomNavBar;

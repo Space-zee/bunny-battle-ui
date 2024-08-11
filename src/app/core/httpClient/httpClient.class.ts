@@ -10,7 +10,8 @@ export enum EHttpMethod {
 
 class HttpService {
   private http: AxiosInstance;
-  private baseURL = process.env.API_BASE_URL;
+  private baseURL = "http://localhost:3001";
+  // private baseURL = process.env.API_BASE_URL;
 
   constructor() {
     this.http = axios.create({ baseURL: this.baseURL });

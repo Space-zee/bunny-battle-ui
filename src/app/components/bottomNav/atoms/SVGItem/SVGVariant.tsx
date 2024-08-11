@@ -2,6 +2,6 @@
 enum SVGVariant {
   Leaderboard = "Leaderboard",
   Lobby = "Lobby",
-  Profile = "Profile",
+  // Profile = "Profile",
 }
 export default SVGVariant;

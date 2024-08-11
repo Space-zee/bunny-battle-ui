@@ -1,0 +1,30 @@
+@import "@/styles/variables";
+
+.walletWrapper {
+  align-items: center;
+  height: 36px;
+  display: flex;
+  gap: 4px;
+  padding: 0 4px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.copyIcon {
+  display: flex;
+  padding: 4px;
+  align-items: center;
+  // margin-right: 8px;
+}
+
+.whiteText {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.grayText {
+  color: $gray-700;
+  font-weight: 600;
+  margin: 0 8px;
+}

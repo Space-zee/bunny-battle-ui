@@ -5,3 +5,14 @@ export const formatAddress = (address: string): string => {
 export const formatString = (str: string): string => {
   return str.slice(0, 4) + "..." + str.slice(-4);
 };
+
+export const formatBalance = (balance: number): string => {
+  if (balance === 0) {
+    return "0.0";
+  }
+  if (balance < 0.0001) {
+    return balance.toFixed(4);
+  }
+  const formatted = balance.toFixed(4);
+  return formatted.replace(/\.?0+$/, "");
+};

@@ -12,6 +12,9 @@ import { Wallet } from "@/app/components/Wallet";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Game } from "@/app/(pages)/games/components/Game";
 import { Loader, Switcher } from "@/app/components";
+import { BotElement } from "@/app/components/bottomNav/molecule/BotElement";
+import { TopElement } from "@/app/components/bottomNav/molecule/TopElement";
+import { BottomNav } from "@/app/components/bottomNav/index";
 
 export default function GamesController() {
   const searchParams = useSearchParams();
@@ -99,6 +102,10 @@ export default function GamesController() {
           />
         ))}
       </Flex>
+      {/* <TopElement />
+      <BotElement /> */}
+      <BottomNav />
+      {/* {userWallet && <WalletItem wallet={userWallet} />} */}
       {userWallet && <Wallet wallet={userWallet} />}
     </main>
   );

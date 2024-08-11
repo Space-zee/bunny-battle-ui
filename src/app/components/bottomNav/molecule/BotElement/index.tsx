@@ -1,19 +1,18 @@
-// components/BottomNavBar/BottomNavBar.tsx
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import BalanceItem from "../../atoms/BalanceItem";
 import WalletItem from "../../atoms/WalletItem";
 import s from "./style.module.scss";
-import { Box, Flex } from "@radix-ui/themes";
-import { useAtom, useSetAtom } from "jotai";
-import * as coreModels from "@/app/core/models";
+import { Flex } from "@radix-ui/themes";
+import { IUserWallet } from "@/app/shared/types";
 
-export const BotElement: React.FC = () => {
-  const [userWallet] = useAtom(coreModels.$userWallet);
+type BotElementProps = {
+  wallet: IUserWallet;
+};
+export const BotElement = ({ wallet }: BotElementProps) => {
   return (
     <Flex className={s.botElement}>
-      <WalletItem wallet={userWallet} />
-      <BalanceItem wallet={userWallet} />
+      <WalletItem wallet={wallet} />
+      <BalanceItem wallet={wallet} />
     </Flex>
   );
 };

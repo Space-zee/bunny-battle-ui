@@ -6,6 +6,7 @@ import LottieItem from "../../atoms/LottieItem";
 import styles from "./style.module.scss";
 import { Box, Flex } from "@radix-ui/themes";
 import { SVGItem, SVGVariant } from "../../atoms/SVGItem";
+import { IUserWallet } from "@/app/shared/types";
 
 interface NavItem {
   id: string;

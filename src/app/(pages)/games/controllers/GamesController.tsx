@@ -5,15 +5,13 @@ import React, { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gamesModels from "../models";
-import { Text, Box, Flex, Button, Tabs } from "@radix-ui/themes";
+import { Text, Box, Flex } from "@radix-ui/themes";
 import Image from "next/image";
 import { colors } from "@/app/shared/constants";
 import { Wallet } from "@/app/components/Wallet";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Game } from "@/app/(pages)/games/components/Game";
 import { Loader, Switcher } from "@/app/components";
-import { BotElement } from "@/app/components/bottomNav/molecule/BotElement";
-import { TopElement } from "@/app/components/bottomNav/molecule/TopElement";
 import { BottomNav } from "@/app/components/bottomNav";
 
 export default function GamesController() {
@@ -102,11 +100,7 @@ export default function GamesController() {
           />
         ))}
       </Flex>
-      {/* <TopElement />
-      <BotElement /> */}
-      <BottomNav />
-      {/* {userWallet && <WalletItem wallet={userWallet} />} */}
-      {userWallet && <Wallet wallet={userWallet} />}
+      {userWallet && <BottomNav wallet={userWallet} />}
     </main>
   );
 }

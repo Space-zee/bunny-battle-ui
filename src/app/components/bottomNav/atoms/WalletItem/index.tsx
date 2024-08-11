@@ -13,7 +13,7 @@ type WalletItemProps = {
 
 const WalletItem = ({ wallet }: WalletItemProps) => {
   return (
-    <motion.div whileTap={{ scale: 0.9 }}>
+    <motion.div whileTap={{ scale: 0.9 }} onClick={() => copy(wallet.wallet)}>
       <Flex className={s.walletWrapper}>
         <Image
           className={s.copyIcon}
@@ -21,7 +21,6 @@ const WalletItem = ({ wallet }: WalletItemProps) => {
           alt={"copy"}
           width={16}
           height={16}
-          onClick={() => copy(wallet.wallet)}
         />
 
         <Text className={s.whiteText}>{formatAddress(wallet.wallet)} </Text>

@@ -14,9 +14,4 @@ const nextConfig = {
   output: "standalone",
 };
 
-module.exports = {
-  nextConfig,
-  images: {
-    domains: ['github.com'],
-  },
-}
+module.exports = nextConfig;

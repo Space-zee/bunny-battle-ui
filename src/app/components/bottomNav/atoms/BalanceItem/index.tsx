@@ -15,16 +15,23 @@ const BalanceItem = ({ wallet }: BalanceItemProps) => {
   return (
     <Flex className={clsx(s.balanceWrapper, isWarning && s.warningWrapper)}>
       <Image
-        className={clsx(s.whiteText, isWarning && s.warningText)}
+        className={clsx(s.copyIcon, isWarning && s.warningIcon)}
         src={"/Icon/24/Scroll.svg"}
         alt={"copy"}
         width={24}
         height={24}
       />
-
-      <Text className={s.whiteText}>
+      <Text className={clsx(s.whiteText, isWarning && s.blackText)}>
         {formatBalance(Number(wallet.balance))} ETH{" "}
       </Text>
+      {isWarning && (
+        <Image
+          src="/Icon/24/warning.svg"
+          alt="warning"
+          width={24}
+          height={24}
+        />
+      )}
     </Flex>
   );
 };

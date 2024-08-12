@@ -6,7 +6,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   env: {
-    API_BASE_URL: process.env.GATEWAY_API_BASE_URL,
+    API_BASE_URL: process.env.API_BASE_URL,
   },
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],

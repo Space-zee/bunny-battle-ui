@@ -47,8 +47,8 @@ export default function GameEndController() {
 
   useEffect(() => {
     $doLoadGameResult({
-      jwtToken: "25243115-d632-4ba9-822b-66fc9b1c3e5a",
-      roomId: "25243115-d632-4ba9-822b-66fc9b1c3e5a",
+      jwtToken: jwtToken,
+      roomId: roomId as string,
     });
   }, []);
 

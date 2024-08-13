@@ -1,0 +1,38 @@
+@import "@/styles/variables";
+
+.root {
+  background: $gray-950;
+  border-radius: 16px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.roomIdWrapper {
+  margin: 12px 0;
+}
+
+.roomId {
+  color: $gray-500;
+}
+
+.userWrapper {
+  width: 100%;
+}
+
+.loser {
+  color: $gray-600;
+}
+
+.winner {
+  color: $primary-white;
+}
+
+
+.winnerEth {
+  color: $green-400;
+}
+
+.loserEth {
+  color: $error-400;
+}

@@ -2,8 +2,10 @@ import { atom } from "jotai/index";
 import { httpClient } from "@/app/core/httpClient";
 import { IGetActiveGamesRes } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
+import { IGetUserEndedGameRes } from "@/app/shared/types/getUserEndedGames";
 
 export const $activeGames = atom<IGetActiveGamesRes[]>([]);
+export const $userEndedGames = atom<IGetUserEndedGameRes[]>([]);
 
 export const $doLoadActiveGames = atom(
   null,
@@ -16,6 +18,25 @@ export const $doLoadActiveGames = atom(
       );
       if (response.data) {
         set($activeGames, response.data);
+      } else {
+        //TODO:HAndle error
+        //set($globalError, { isOpen: true, description: "Unknown Error" });
+      }
+    }
+  },
+);
+
+export const $doLoadUserEndedGames = atom(
+  null,
+  async (get, set, args: { jwtToken: string | null }) => {
+    const { jwtToken } = args;
+    if (jwtToken) {
+      const response = await httpClient.get<IGetUserEndedGameRes[]>(
+        apiPaths.getUserEndedGames(),
+        jwtToken,
+      );
+      if (response.data) {
+        set($userEndedGames, response.data);
       } else {
         //TODO:HAndle error
         //set($globalError, { isOpen: true, description: "Unknown Error" });

@@ -37,7 +37,6 @@ export default function GameController() {
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [TgStorage] = useAtom(coreModels.$tgStorage);
-  const [userWallet] = useAtom(coreModels.$userWallet);
   const [game, setGame] = useAtom(gameModels.$game);
   const $doLoadGameData = useSetAtom(gameModels.$doLoadGameData);
   const prizePool = Number(game?.bet) + Number(game?.bet) * 0.99;
@@ -244,7 +243,7 @@ export default function GameController() {
     }
   };
 
-  const onWinner = (data: { address: string }) => {
+  const onWinner = () => {
     TgButtons?.mainButton.hideProgress();
     router.push(`/gameEnd?roomId=${roomId}&token=${jwtToken}`);
   };
@@ -395,7 +394,7 @@ export default function GameController() {
     }
   }, [game]);
 
-  return game ? (
+  return game.bet ? (
     <main className={s.main}>
       <Flex className={s.headerWrapper} align={"center"}>
         <Image src={"/gameLogo.svg"} alt={"gameLogo"} width={176} height={48} />

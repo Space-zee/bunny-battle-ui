@@ -1,0 +1,49 @@
+@import "@/styles/variables";
+
+.balanceWrapper,
+.warningWrapper {
+  align-items: center;
+  height: 32px;
+  display: flex;
+  gap: 2px;
+  padding-right: 4px;
+  cursor: default;
+  background-color: $black;
+  border-radius: 24px 24px 24px 24px;
+  border: 2px solid $black;
+}
+
+.warningWrapper {
+  background-color: $warning-400;
+  border: 2px solid $warning-400;
+  // gap: 6px;
+  padding-right: 4px;
+}
+
+.copyIcon,
+.warningIcon {
+  display: flex;
+  padding: 2px;
+  align-items: center;
+  background-color: black;
+  border-radius: 24px 24px 24px 24px;
+}
+
+.warningIcon {
+  background-color: $black;
+}
+
+.whiteText {
+  font-size: 16px;
+  font-weight: 600;
+  color: $primary-white;
+  padding-right: 6px;
+}
+
+.blackText {
+  font-size: 16px;
+  font-weight: 600;
+  color: $warning-900;
+  padding-right: 2px;
+  padding-left: 4px;
+}

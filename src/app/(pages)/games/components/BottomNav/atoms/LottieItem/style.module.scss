@@ -1,0 +1,14 @@
+@import "@/styles/variables";
+
+.LottieContainer {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    // border-radius: 50%;
+    overflow: visible;
+  }
+  
+  
+  .active {
+    border: 2.5px solid $pink-400; /* Pink color for active state */
+  }

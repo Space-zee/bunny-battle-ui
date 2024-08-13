@@ -1,0 +1,20 @@
+// components/BottomNavBar/BottomNavBar.module.scss
+@import "@/styles/variables";
+
+.botElement {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 24px 24px;
+  padding: 2px 8px 2px 8px;
+  margin: -1px 16px 0px 16px;
+  width: 100%; // Adjust for the horizontal margins
+  background-color: $gray-950;
+  border: 1px solid $gray-800;
+  -webkit-backdrop-filter: blur(
+    80px
+  ); /* For Safari and other WebKit-based browsers */
+  backdrop-filter: blur(80px);
+  overflow: hidden;
+}

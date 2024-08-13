@@ -1,0 +1,71 @@
+import s from "./style.module.scss";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import Image from "next/image";
+import { Switcher } from "@/app/components";
+import React, { useState } from "react";
+import { Game } from "@/app/(pages)/games/components/Game";
+import { WebApp } from "@twa-dev/types";
+import { IGetActiveGamesRes } from "@/app/shared/types";
+import { IGetUserEndedGameRes } from "@/app/shared/types/getUserEndedGames";
+import { EndedGame } from "@/app/(pages)/games/components/EndedGame";
+
+type LobbySceneProps = {
+  onReload: () => void;
+  onDeleteGame: (roomId: string) => void;
+  onEnterGame: (roomId: string) => void;
+  activeGames: IGetActiveGamesRes[];
+  userEndedGames: IGetUserEndedGameRes[];
+  WebApp: WebApp;
+};
+
+export const LobbyScene = ({
+  onReload,
+  onDeleteGame,
+  WebApp,
+  activeGames,
+  onEnterGame,
+  userEndedGames,
+}: LobbySceneProps) => {
+  const [gamesTab, setGamesTab] = useState("active");
+
+  return (
+    <Box className={s.root}>
+      <Box className={s.headerWrapper}>
+        <Text className={s.header} weight="bold">
+          Combat lobby
+        </Text>
+        <Image
+          src={"/reload.svg"}
+          alt={"reload"}
+          width={26}
+          height={26}
+          className={s.reloadIcon}
+          onClick={onReload}
+        />
+      </Box>
+      <Switcher
+        activeTab={gamesTab}
+        tabs={[
+          { id: "active", label: "Active" },
+          { id: "ended", label: "Ended" },
+        ]}
+        onSetActiveTab={setGamesTab}
+      />
+      <Flex className={s.gamesWrapper} direction="column" gap="3">
+        {gamesTab === "active"
+          ? activeGames.map((el, index) => (
+              <Game
+                key={index}
+                webApp={WebApp}
+                game={el}
+                onDeleteGame={() => onDeleteGame(el.roomId)}
+                onEnterGame={() => onEnterGame(el.roomId)}
+              />
+            ))
+          : userEndedGames.map((el, index) => (
+              <EndedGame key={index} endedGame={el} />
+            ))}
+      </Flex>
+    </Box>
+  );
+};

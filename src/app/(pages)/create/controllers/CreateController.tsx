@@ -8,7 +8,7 @@ import * as coreModels from "@/app/core/models";
 import * as createModels from "../models";
 import { Text, Box, Flex } from "@radix-ui/themes";
 import { colors } from "@/app/shared/constants";
-import { Input, Wallet } from "@/app/components";
+import { Input } from "@/app/components";
 import { PRESETS } from "@/app/(pages)/create/constants";
 import { Bet } from "@/app/(pages)/create/components";
 import Image from "next/image";
@@ -23,7 +23,7 @@ export default function CreateController() {
   const [error, setError] = useState("");
 
   const [TgButtons] = useAtom(coreModels.$tgButtons);
-  const [userWallet] = useAtom(coreModels.$userWallet);
+  const [userData] = useAtom(coreModels.$userData);
 
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
@@ -44,7 +44,7 @@ export default function CreateController() {
 
   const validateBet = (value: string) => {
     if (/^-?\d*\.?\d*$/.test(value)) {
-      if (Number(value) > Number(userWallet?.balance)) {
+      if (Number(value) > Number(userData?.balance)) {
         setBet(value);
         setError("Not enough balance");
       } else {
@@ -62,7 +62,7 @@ export default function CreateController() {
         color: colors.pink400,
         text_color: colors.black,
         text: "Confirm",
-        is_active: Number(userWallet?.balance) > Number(bet),
+        is_active: Number(userData?.balance) > Number(bet),
       });
       TgButtons.showBackButton(onBack);
     }
@@ -76,7 +76,7 @@ export default function CreateController() {
         text: "Confirm",
         is_active:
           !error &&
-          Number(userWallet?.balance) > Number(bet) &&
+          Number(userData?.balance) > Number(bet) &&
           Number(bet) !== 0,
       });
     }
@@ -116,7 +116,6 @@ export default function CreateController() {
           bet, where 1% is a fee
         </Text>
       </Box>
-      {userWallet && <Wallet wallet={userWallet} />}
     </main>
   );
 }

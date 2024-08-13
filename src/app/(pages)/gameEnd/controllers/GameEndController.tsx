@@ -22,7 +22,7 @@ export default function GameEndController() {
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [gameResult] = useAtom(gameEndModels.$gameResult);
-  const [userWallet] = useAtom(coreModels.$userWallet);
+  const [userData] = useAtom(coreModels.$userData);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadGameResult = useSetAtom(gameEndModels.$doLoadGameResult);
@@ -58,7 +58,7 @@ export default function GameEndController() {
         <Loader />
       ) : (
         <Flex>
-          {userWallet?.wallet === gameResult.winner ? (
+          {userData?.wallet === gameResult.winner ? (
             <Box>
               <Flex
                 direction="column"
@@ -111,7 +111,7 @@ export default function GameEndController() {
           <Box>
             {gameResult.steps.length - 1 === index ? (
               <Text>
-                {userWallet?.wallet === gameResult.winner
+                {userData?.wallet === gameResult.winner
                   ? "🎉 You Win"
                   : "😔 You Lose"}
               </Text>

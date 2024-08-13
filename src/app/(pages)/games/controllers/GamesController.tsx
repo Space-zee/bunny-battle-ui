@@ -5,29 +5,36 @@ import React, { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gamesModels from "../models";
-import { Text, Box, Flex, Button, Tabs } from "@radix-ui/themes";
-import Image from "next/image";
 import { colors } from "@/app/shared/constants";
-import { Wallet } from "@/app/components/Wallet";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Game } from "@/app/(pages)/games/components/Game";
-import { Loader, Switcher } from "@/app/components";
+import { Loader } from "@/app/components";
+import {
+  LeaderboardScene,
+  LobbyScene,
+  WithdrawScene,
+} from "@/app/(pages)/games/components";
+import { BottomNav } from "@/app/(pages)/games/components/BottomNav";
+import { NavItemEnum } from "@/app/(pages)/games/enums";
 
 export default function GamesController() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const jwtToken = searchParams.get("token");
 
-  const [activeTab, setActiveTab] = useState("active");
+  const [activeNavTab, setActiveNavTab] = useState<NavItemEnum>(
+    NavItemEnum.Lobby,
+  );
 
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
-  const [userWallet] = useAtom(coreModels.$userWallet);
+  const [userData] = useAtom(coreModels.$userData);
   const [activeGames] = useAtom(gamesModels.$activeGames);
+  const [userEndedGames] = useAtom(gamesModels.$userEndedGames);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
-  const $doLoadUserWallet = useSetAtom(coreModels.$doLoadUserWallet);
+  const $doLoadUserWallet = useSetAtom(coreModels.$doLoadUserData);
   const $doLoadActiveGames = useSetAtom(gamesModels.$doLoadActiveGames);
+  const $doLoadUserEndedGames = useSetAtom(gamesModels.$doLoadUserEndedGames);
   const $doDeleteGame = useSetAtom(gamesModels.$doDeleteGame);
 
   const onCreateBattle = () => {
@@ -47,59 +54,51 @@ export default function GamesController() {
         color: colors.pink400,
         text_color: colors.black,
         text: "Create Battle",
-        is_active: !!(userWallet && Number(userWallet.balance) > 0),
+        is_active: !!(userData && Number(userData.balance) > 0),
       });
       TgButtons?.hideBackButton();
     }
-  }, [WebApp, userWallet]);
+  }, [WebApp, userData]);
 
   useEffect(() => {
     $doLoadUserWallet({ jwtToken });
     $doLoadActiveGames({ jwtToken });
+    $doLoadUserEndedGames({ jwtToken });
   }, []);
 
-  return !WebApp || !userWallet || !activeGames ? (
+  const onReload = async () => {
+    await $doLoadActiveGames({ jwtToken });
+    await $doLoadUserWallet({ jwtToken });
+  };
+  const onEnterGame = (roomId: string) => {
+    router.push(`/game/${roomId}?token=${jwtToken}`);
+  };
+
+  return !WebApp || !userData || !activeGames ? (
     <Loader />
   ) : (
     <main className={s.main}>
-      <Box className={s.headerWrapper}>
-        <Text className={s.header} weight="bold">
-          Combat lobby
-        </Text>
-        <Image
-          src={"/reload.svg"}
-          alt={"reload"}
-          width={26}
-          height={26}
-          className={s.reloadIcon}
-          onClick={() => {
-            $doLoadActiveGames({ jwtToken });
-            $doLoadUserWallet({ jwtToken });
-          }}
+      {activeNavTab === NavItemEnum.Lobby && (
+        <LobbyScene
+          onDeleteGame={onDeleteGame}
+          onEnterGame={onEnterGame}
+          onReload={onReload}
+          activeGames={activeGames}
+          userEndedGames={userEndedGames}
+          WebApp={WebApp}
         />
-      </Box>
-      <Switcher
-        activeTab={activeTab}
-        tabs={[
-          { id: "active", label: "Active" },
-          { id: "ended", label: "Ended" },
-        ]}
-        onSetActiveTab={setActiveTab}
-      />
-      <Flex className={s.gamesWrapper} direction="column" gap="3">
-        {activeGames.map((el, index) => (
-          <Game
-            webApp={WebApp}
-            key={index}
-            game={el}
-            onDeleteGame={onDeleteGame}
-            onEnterGame={() => {
-              router.push(`/game/${el.roomId}?token=${jwtToken}`);
-            }}
-          />
-        ))}
-      </Flex>
-      {userWallet && <Wallet wallet={userWallet} />}
+      )}
+      {activeNavTab === NavItemEnum.Leaderboard && <LeaderboardScene />}
+      {activeNavTab === NavItemEnum.Profile && (
+        <WithdrawScene WebApp={WebApp} />
+      )}
+      {userData && (
+        <BottomNav
+          activeTab={activeNavTab}
+          onSetActiveTab={setActiveNavTab}
+          userData={userData}
+        />
+      )}
     </main>
   );
 }

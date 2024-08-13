@@ -12,7 +12,7 @@ export const Field = ({ onChangeGame, game }: FieldProps) => {
   const cells = Array(9).fill(null);
 
   return (
-    <Grid columns="3" gap="2" rows="3" width="auto" className={s.root}>
+    <Grid columns="3" gap="2" rows="3" className={s.root}>
       {cells.map((el, index) => (
         <Cell
           key={index}

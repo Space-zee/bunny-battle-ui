@@ -10,6 +10,7 @@ import {
   compareCoordinates,
   gridIndexToCoordinates,
 } from "@/app/shared/utils/math";
+import { motion } from "framer-motion";
 
 type CellProps = {
   index: number;
@@ -144,21 +145,23 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
   };
 
   return (
-    <Flex
-      className={clsx(
-        s.root,
-        cellState === CellStatusEnum.Disabled && s.disabled,
-        cellState === CellStatusEnum.Set && s.set,
-        cellState === CellStatusEnum.Verify && s.verify,
-        cellState === CellStatusEnum.OpponentDefault && s.opponentDefault,
-        cellState === CellStatusEnum.OpponentShot && s.opponentShot,
-      )}
-      justify="between"
-      onClick={() => onClick(index)}
-    >
-      <Box>{index + 1}</Box>
-      <Box className={s.value}>{cellInnerConfig[cellState]}</Box>
-      <Box />
-    </Flex>
+    <motion.div whileTap={{ scale: 0.9 }}>
+      <Flex
+        className={clsx(
+          s.root,
+          cellState === CellStatusEnum.Disabled && s.disabled,
+          cellState === CellStatusEnum.Set && s.set,
+          cellState === CellStatusEnum.Verify && s.verify,
+          cellState === CellStatusEnum.OpponentDefault && s.opponentDefault,
+          cellState === CellStatusEnum.OpponentShot && s.opponentShot,
+        )}
+        justify="between"
+        onClick={() => onClick(index)}
+      >
+        <Box>{index + 1}</Box>
+        <Box className={s.value}>{cellInnerConfig[cellState]}</Box>
+        <Box />
+      </Flex>
+    </motion.div>
   );
 };

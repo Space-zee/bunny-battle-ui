@@ -1,0 +1,55 @@
+// components/BottomNavBar/BottomNavBar.module.scss
+@import "@/styles/variables";
+
+.bottomNavBar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 40px 40px 0 0;
+  padding: 0px 8px 8px 8px;
+  margin: 0px 16px 0px 16px;
+  width: 100%; // Adjust for the horizontal margins
+  background-color: $black-07;
+  border: 1px solid $gray-800;
+  -webkit-backdrop-filter: blur(
+    80px
+  ); /* For Safari and other WebKit-based browsers */
+  backdrop-filter: blur(80px);
+  z-index: 1;
+}
+
+.navItemWrapper {
+  // background-color: beige;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 8px;
+  width: 80px;
+  height: 64px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.sliderWrapper {
+  // background-color: rgba(245, 245, 220, 0.215);
+  width: calc(100% - 96px);
+  margin-left: calc(48px - 8px);
+  position: absolute;
+  bottom: -2px;
+  height: 4px;
+  z-index: 1;
+}
+
+.slider {
+  margin-left: -32px;
+  position: absolute;
+  height: 6px;
+  width: 64px;
+  background-color: $pink-400; // Pink color for the slider
+  border-radius: 3px;
+  z-index: 2;
+  box-shadow:
+    0px 2px 0px 0px rgba(0, 0, 0, 0.4),
+    0px 1px 0px 0px rgba(255, 255, 255, 0.25) inset;
+}

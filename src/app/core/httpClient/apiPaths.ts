@@ -1,9 +1,12 @@
 export const apiPaths = {
-  getUserWallet(): string {
-    return "/getUserWallet";
+  getUserData(): string {
+    return "/getUserData";
   },
   getActiveGames(): string {
     return "/getActiveGames";
+  },
+  getUserEndedGames(): string {
+    return "/getUserEndedGames";
   },
   createGame(): string {
     return "/createGame";

@@ -1,4 +1,5 @@
-export interface IUserWallet {
+export interface IUserData {
   wallet: string;
   balance: string;
+  photo: string;
 }

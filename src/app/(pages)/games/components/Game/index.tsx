@@ -11,7 +11,7 @@ import React from "react";
 type GameProps = {
   game: IGetActiveGamesRes;
   onEnterGame: () => void;
-  onDeleteGame: (roomId: string) => void;
+  onDeleteGame: () => void;
   webApp: WebApp;
 };
 
@@ -99,7 +99,7 @@ export const Game = ({
               />
 
               <Image
-                onClick={() => onDeleteGame(game.roomId)}
+                onClick={onDeleteGame}
                 className={s.trashIcon}
                 src={"/trash.svg"}
                 alt={"trash"}

@@ -51,11 +51,11 @@ export const TopElement = ({
 
   const getSliderPosition = () => {
     switch (activeTab) {
-      case "leaderboard":
+      case NavItemEnum.Leaderboard:
         return "0%";
-      case "lobby":
+      case NavItemEnum.Lobby:
         return "50%";
-      case "profile":
+      case NavItemEnum.Profile:
         return "100%";
       default:
         return "50%";

@@ -41,7 +41,7 @@ export const $doLoadUserData = atom(
         jwtToken,
       );
       if (response.data) {
-        const photo = !response.data.photo
+        const photo = response.data.photo
           ? response.data.photo
           : emojiToBase64(getArrRandomElement(animalsEmoji));
         set($userData, {

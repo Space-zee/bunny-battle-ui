@@ -9,24 +9,28 @@ import { motion } from "framer-motion";
 
 type WalletItemProps = {
   wallet: IUserWallet;
+  oncopy: () => void; // Add this line
 };
 
-const WalletItem = ({ wallet }: WalletItemProps) => {
+const WalletItem = ({ wallet, oncopy }: WalletItemProps) => {
+  const handleClick = () => {
+    copy(wallet.wallet);
+    oncopy();
+  };
+
   return (
-    <motion.div whileTap={{ scale: 0.9 }} onClick={() => copy(wallet.wallet)}>
+    <motion.div whileTap={{ scale: 0.9 }} onClick={handleClick}>
       <Flex className={s.walletWrapper}>
         <Image
           className={s.copyIcon}
-          src={"/copy.svg"}
-          alt={"copy"}
+          src="/copy.svg"
+          alt="copy"
           width={16}
           height={16}
         />
-
-        <Text className={s.whiteText}>{formatAddress(wallet.wallet)} </Text>
+        <Text className={s.whiteText}>{formatAddress(wallet.wallet)}</Text>
       </Flex>
     </motion.div>
   );
 };
-
 export default WalletItem;

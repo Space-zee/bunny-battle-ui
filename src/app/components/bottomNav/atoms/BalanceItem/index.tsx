@@ -12,8 +12,16 @@ type BalanceItemProps = {
 
 const BalanceItem = ({ wallet }: BalanceItemProps) => {
   const isWarning = Number(wallet.balance) === 0;
+  const handleClick = () => {
+    navigator.clipboard.writeText(wallet.balance.toString());
+  };
+
   return (
-    <Flex className={clsx(s.balanceWrapper, isWarning && s.warningWrapper)}>
+    <Flex
+      className={clsx(s.balanceWrapper, isWarning && s.warningWrapper)}
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+    >
       <Image
         className={clsx(s.copyIcon, isWarning && s.warningIcon)}
         src={"/Icon/24/Scroll.svg"}

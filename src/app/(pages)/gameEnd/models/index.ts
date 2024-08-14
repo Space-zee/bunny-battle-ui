@@ -2,6 +2,8 @@ import { atom } from "jotai";
 import { httpClient } from "@/app/core/httpClient";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import { IGameResultStep } from "@/app/(pages)/gameEnd/types";
+import { $notification } from "@/app/core/models";
+import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export const $gameResult = atom<{
   steps: IGameResultStep[];
@@ -30,8 +32,12 @@ export const $doLoadGameResult = atom(
           gameId: response.data.gameId,
         });
       } else {
-        //TODO:HAndle error
-        //set($globalError, { isOpen: true, description: "Unknown Error" });
+        set($notification, {
+          titleIcon: NotificationTitleIcon.Error,
+          isOpen: true,
+          title: "An error occurred",
+          description: { text: response.error },
+        });
       }
     }
   },

@@ -436,7 +436,7 @@ export default function GameController() {
           />
         </Flex>
         <Text className={s.prizeOf}>for prize of</Text>
-        <Text className={s.prize}>{prizePool} ETH</Text>
+        <Text className={s.prize}>{prizePool.toFixed(5)} ETH</Text>
       </Flex>
 
       {game.status !== GameStatusEnum.RabbitsSet && (

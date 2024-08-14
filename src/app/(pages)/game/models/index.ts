@@ -3,7 +3,8 @@ import { ICoordinates, ICoordinatesWithHit } from "@/app/shared/types";
 import { httpClient } from "@/app/core/httpClient";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import * as coreModels from "@/app/core/models";
-import { TgStorageKeysEnum } from "@/app/shared/enums";
+import { NotificationTitleIcon, TgStorageKeysEnum } from "@/app/shared/enums";
+import { $notification } from "@/app/core/models";
 export enum GameStatusEnum {
   RabbitsSet = "rabbitsSet",
   UserTurn = "userTurn",
@@ -97,8 +98,12 @@ export const $doLoadGameData = atom(
           },
         });
       } else {
-        //TODO:HAndle error
-        //set($globalError, { isOpen: true, description: "Unknown Error" });
+        set($notification, {
+          titleIcon: NotificationTitleIcon.Error,
+          isOpen: true,
+          title: "An error occurred",
+          description: { text: response.error },
+        });
       }
     }
   },

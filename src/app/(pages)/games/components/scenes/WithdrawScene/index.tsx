@@ -1,86 +1,129 @@
 import s from "./style.module.scss";
 import { Button, Text, Flex, Box } from "@radix-ui/themes";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { WebApp } from "@twa-dev/types";
 import { IUserData } from "@/app/shared/types";
 import { motion } from "framer-motion";
 import { Avatar } from "@/app/components";
-import { formatBalance } from "@/app/shared/utils";
+import { formatBalance, TgButtons } from "@/app/shared/utils";
 import { colors } from "@/app/shared/constants";
+import { WithdrawWindow } from "@/app/(pages)/games/components/WithdrawWindow";
+import clsx from "clsx";
 
 type WithdrawSceneProps = {
   WebApp: WebApp;
+  TgButtons: TgButtons;
   userData: IUserData;
   onReload: () => void;
+  onCreateBattle: () => void;
+  onWithdraw: (amount: string, to: string) => Promise<boolean>;
 };
 
 export const WithdrawScene = ({
   WebApp,
   userData,
   onReload,
+  TgButtons,
+  onCreateBattle,
+  onWithdraw,
 }: WithdrawSceneProps) => {
-  return (
-    <Flex className={s.root} direction="column" align="center" justify="center">
-      <motion.div
-        whileTap={{ scale: 0.9 }}
-        className={s.headerWrapper}
-        onClick={onReload}
-      >
-        <Text className={s.header}>My profile</Text>
-        <Image
-          src={"/reload.svg"}
-          alt={"reload"}
-          width={26}
-          height={26}
-          className={s.reloadIcon}
-        />
-      </motion.div>
+  const [isShowWithdrawWindow, setShowWithdrawWindow] = useState(false);
 
-      <Flex className={s.profileWrapperBorder}>
-        <Flex className={s.profileWrapper} justify="between" direction="column">
-          <Flex justify="between">
-            <Flex align="center" justify="center">
-              <Avatar photo={userData.photo} width={48} height={48} />
-              <Text className={s.username}>
-                @
-                {WebApp.initDataUnsafe.user?.username
-                  ? WebApp.initDataUnsafe.user?.username
-                  : "hidden"}
-              </Text>
+  useEffect(() => {
+    if (!isShowWithdrawWindow) {
+      TgButtons.mainButton.hideProgress();
+      TgButtons.showMainButton(onCreateBattle, {
+        color: colors.pink400,
+        text_color: colors.black,
+        text: "Create Battle",
+        is_active: userData && Number(userData.balance) > 0,
+      });
+    }
+  }, [isShowWithdrawWindow]);
+  return (
+    <Flex className={s.root} align="center" justify="center">
+      <Flex
+        className={clsx(s.contentWrapper, isShowWithdrawWindow && s.disabled)}
+        direction="column"
+        align="center"
+        justify="center"
+      >
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          className={s.headerWrapper}
+          onClick={onReload}
+        >
+          <Text className={s.header}>My profile</Text>
+          <Image
+            src={"/reload.svg"}
+            alt={"reload"}
+            width={26}
+            height={26}
+            className={s.reloadIcon}
+          />
+        </motion.div>
+
+        <Flex className={s.profileWrapperBorder}>
+          <Flex
+            className={s.profileWrapper}
+            justify="between"
+            direction="column"
+          >
+            <Flex justify="between">
+              <Flex align="center" justify="center">
+                <Avatar photo={userData.photo} width={48} height={48} />
+                <Text className={s.username}>
+                  @
+                  {WebApp.initDataUnsafe.user?.username
+                    ? WebApp.initDataUnsafe.user?.username
+                    : "hidden"}
+                </Text>
+              </Flex>
+              <Flex direction="column" align="end" justify="center">
+                <Text className={s.totalBalanceHeader}>Total balance</Text>
+                <Text className={s.totalBalance}>
+                  {formatBalance(Number(userData.balance))} ETH
+                </Text>
+              </Flex>
             </Flex>
-            <Flex direction="column" align="end" justify="center">
-              <Text className={s.totalBalanceHeader}>Total balance</Text>
-              <Text className={s.totalBalance}>
-                {formatBalance(Number(userData.balance))} ETH
-              </Text>
-            </Flex>
+            <Button
+              onClick={() => setShowWithdrawWindow(true)}
+              className={s.withdrawButton}
+            >
+              <Text>Withdraw</Text>
+              <Image
+                src={"/withdraw.svg"}
+                alt={"withdraw"}
+                width={20}
+                height={20}
+              />
+            </Button>
           </Flex>
-          <Button className={s.withdrawButton}>
-            <Text>Withdraw</Text>
-            <Image
-              src={"/withdraw.svg"}
-              alt={"withdraw"}
-              width={20}
-              height={20}
-            />
-          </Button>
+        </Flex>
+
+        <Flex className={s.gamesStatsWrapper}>
+          <CustomBox
+            header={"Wins"}
+            value={userData.wins.toString()}
+            color={colors.green400}
+          />
+          <CustomBox
+            header={"Loses"}
+            value={userData.loses.toString()}
+            color={colors.error400}
+          />
+          <CustomBox header={"MMR"} value={"SOON"} color={colors.white} />
         </Flex>
       </Flex>
-
-      <Flex className={s.gamesStatsWrapper}>
-        <CustomBox
-          header={"Wins"}
-          value={userData.wins.toString()}
-          color={colors.green400}
+      {isShowWithdrawWindow && (
+        <WithdrawWindow
+          TgButtons={TgButtons}
+          onWithdraw={onWithdraw}
+          onClose={() => setShowWithdrawWindow(false)}
+          balance={userData.balance}
         />
-        <CustomBox
-          header={"Loses"}
-          value={userData.loses.toString()}
-          color={colors.error400}
-        />
-        <CustomBox header={"MMR"} value={"SOON"} color={colors.white} />
-      </Flex>
+      )}
     </Flex>
   );
 };

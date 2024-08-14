@@ -31,17 +31,15 @@ export const LobbyScene = ({
 
   return (
     <Flex className={s.root} direction="column" align="center" justify="center">
-      <motion.div whileTap={{ scale: 0.9 }} className={s.headerWrapper}>
+      <motion.div
+        whileTap={{ scale: 0.9 }}
+        className={s.headerWrapper}
+        onClick={onReload}
+      >
         <Text className={s.header} weight="bold">
           Combat lobby
         </Text>
-        <Image
-          src={"/reload.svg"}
-          alt={"reload"}
-          width={26}
-          height={26}
-          onClick={onReload}
-        />
+        <Image src={"/reload.svg"} alt={"reload"} width={26} height={26} />
       </motion.div>
       <Switcher
         activeTab={gamesTab}

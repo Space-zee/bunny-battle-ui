@@ -3,17 +3,20 @@ import { IUserData } from "@/app/shared/types";
 import Image from "next/image";
 import { Flex, Text } from "@radix-ui/themes";
 import { formatAddress } from "@/app/shared/utils";
-import copy from "copy-text-to-clipboard";
 import "@radix-ui/themes/styles.css";
 import { motion } from "framer-motion";
 
 type WalletItemProps = {
   userData: IUserData;
+  onCopyWallet: (address: string) => void;
 };
 
-const WalletItem = ({ userData }: WalletItemProps) => {
+const WalletItem = ({ userData, onCopyWallet }: WalletItemProps) => {
   return (
-    <motion.div whileTap={{ scale: 0.9 }} onClick={() => copy(userData.wallet)}>
+    <motion.div
+      whileTap={{ scale: 0.9 }}
+      onClick={() => onCopyWallet(userData.wallet)}
+    >
       <Flex className={s.walletWrapper}>
         <Image
           className={s.copyIcon}

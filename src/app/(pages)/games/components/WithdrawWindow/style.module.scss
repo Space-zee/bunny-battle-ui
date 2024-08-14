@@ -1,0 +1,63 @@
+@import "@/styles/variables";
+
+.root {
+  background: $gray-950;
+  border-radius: 24px 24px 0 0;
+  position: absolute;
+  bottom: 0;
+  z-index: 3;
+  width: 100%;
+  padding: 16px;
+}
+
+.headerWrapper {
+  width: 100%;
+}
+
+.header {
+  font-size: 20px;
+  font-weight: 600;
+  color: #F5F8FF;
+}
+
+.closeIcon {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.inputWrapper {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.inputHeader {
+  padding: 8px 12px;
+}
+
+.selectAmount {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-500;
+}
+
+.balance {
+  font-size: 16px;
+  font-weight: 600;
+  color: $primary-white;
+}
+
+.maxButton {
+  font-size: 16px;
+  font-weight: 700;
+  color: $pink-400;
+  padding-left: 8px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.input {
+  width: 100%;
+}

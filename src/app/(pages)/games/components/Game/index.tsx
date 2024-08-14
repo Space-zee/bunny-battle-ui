@@ -49,7 +49,7 @@ export const Game = ({
                 />
                 <Box>⚔</Box>
                 <Avatar
-                  className={s.avatar}
+                  className={s.opponentAvatar}
                   photo={game.joiner?.photo as string}
                   isActive={false}
                   width={32}
@@ -68,7 +68,7 @@ export const Game = ({
                 />
                 <Box>⚔</Box>
                 <Avatar
-                  className={s.avatar}
+                  className={s.opponentAvatar}
                   photo={game.creator.photo}
                   isActive={false}
                   width={32}

@@ -4,6 +4,14 @@
   width: 100%;
 }
 
+.contentWrapper {
+  width: 100%;
+
+  &.disabled {
+    opacity: .5;
+  }
+}
+
 .headerWrapper {
   &:hover {
     cursor: pointer;
@@ -54,11 +62,11 @@
 }
 
 .withdrawButton {
-  border: 1px solid $gray-700 !important;
-  background: transparent !important;
-  margin-top: 16px !important;
-  border-radius: 8px !important;
-  height: 40px !important;
+  border: 1px solid $gray-700;
+  background: transparent;
+  margin-top: 16px;
+  border-radius: 8px;
+  height: 40px;
 }
 
 .gamesStatsWrapper {

@@ -36,7 +36,7 @@ export default function CreateController() {
     validateBet(value);
   };
   const onConfirm = async () => {
-    const res = await $doCreateGame({ jwtToken, bet });
+    const res = await $doCreateGame({ jwtToken, bet: Number(bet).toFixed(5) });
     if (res && res.success) {
       router.push(`/game/${res.data?.roomId}?token=${jwtToken}`);
     }
@@ -44,7 +44,7 @@ export default function CreateController() {
 
   const validateBet = (value: string) => {
     if (/^-?\d*\.?\d*$/.test(value)) {
-      if (Number(value) > Number(userData?.balance)) {
+      if (Number(value) > Number(userData?.balance) && Number(value) < 0) {
         setBet(value);
         setError("Not enough balance");
       } else {

@@ -15,6 +15,8 @@ import {
 } from "@/app/(pages)/games/components";
 import { BottomNav } from "@/app/(pages)/games/components/BottomNav";
 import { NavItemEnum } from "@/app/(pages)/games/enums";
+import copy from "copy-text-to-clipboard";
+import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export default function GamesController() {
   const searchParams = useSearchParams();
@@ -30,15 +32,21 @@ export default function GamesController() {
   const [userData] = useAtom(coreModels.$userData);
   const [activeGames] = useAtom(gamesModels.$activeGames);
   const [userEndedGames] = useAtom(gamesModels.$userEndedGames);
+  const [, setNotification] = useAtom(coreModels.$notification);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadUserData = useSetAtom(coreModels.$doLoadUserData);
   const $doLoadActiveGames = useSetAtom(gamesModels.$doLoadActiveGames);
   const $doLoadUserEndedGames = useSetAtom(gamesModels.$doLoadUserEndedGames);
   const $doDeleteGame = useSetAtom(gamesModels.$doDeleteGame);
+  const $doWithdraw = useSetAtom(gamesModels.$doWithdraw);
 
   const onCreateBattle = () => {
     router.push(`/create?token=${jwtToken}`);
+  };
+
+  const onWithdraw = async (amount: string, to: string) => {
+    return !!(await $doWithdraw({ amount, jwtToken, to }));
   };
 
   const onDeleteGame = async (roomId: string) => {
@@ -70,14 +78,25 @@ export default function GamesController() {
     await $doLoadActiveGames({ jwtToken });
     await $doLoadUserData({ jwtToken });
   };
+
   const onReloadProfile = async () => {
     await $doLoadUserData({ jwtToken });
   };
+
   const onEnterGame = (roomId: string) => {
     router.push(`/game/${roomId}?token=${jwtToken}`);
   };
 
-  return !WebApp || !userData || !activeGames ? (
+  const onCopyWallet = (address: string) => {
+    copy(address);
+    setNotification({
+      isOpen: true,
+      titleIcon: NotificationTitleIcon.Copy,
+      title: "Address copied",
+    });
+  };
+
+  return !WebApp || !TgButtons || !userData || !activeGames ? (
     <Loader />
   ) : (
     <main className={s.main}>
@@ -94,6 +113,9 @@ export default function GamesController() {
       {activeNavTab === NavItemEnum.Leaderboard && <LeaderboardScene />}
       {activeNavTab === NavItemEnum.Profile && (
         <WithdrawScene
+          onWithdraw={onWithdraw}
+          onCreateBattle={onCreateBattle}
+          TgButtons={TgButtons}
           onReload={onReloadProfile}
           userData={userData}
           WebApp={WebApp}
@@ -101,6 +123,7 @@ export default function GamesController() {
       )}
       {userData && (
         <BottomNav
+          onCopyWallet={onCopyWallet}
           activeTab={activeNavTab}
           onSetActiveTab={setActiveNavTab}
           userData={userData}

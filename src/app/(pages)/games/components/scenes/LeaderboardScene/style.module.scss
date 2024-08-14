@@ -1,6 +1,6 @@
 @import "@/styles/variables";
 
-.root{
+.root {
   font-size: 32px;
   line-height: 48px;
   padding-right: 6px;
@@ -9,9 +9,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
-.comingSoon{
-  font-size: 16px;
-  color: $gray-500;
+.boxBorder {
+  background: linear-gradient(180deg, #1F2A37 0%, rgba(31, 42, 55, 0) 100%);;;
+  padding: 1px;
+  width: 100%;
+  height: 45vh;
+  border-radius: 16px;
+  margin-top: 24px;
+}
+
+.box {
+  background: $gray-950;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+}
+
+.comingSoon {
+  font-size: 20px;
+  color: $gray-700;
 }

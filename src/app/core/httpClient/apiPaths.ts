@@ -14,6 +14,9 @@ export const apiPaths = {
   deleteGame(): string {
     return "/deleteGame";
   },
+  withdrawFunds(): string {
+    return "/withdrawFunds";
+  },
   getGameData(roomId: string): string {
     return `/getGameData/${roomId}`;
   },

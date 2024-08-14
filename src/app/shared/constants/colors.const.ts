@@ -6,4 +6,6 @@ export const colors = {
   gray800: "#26272b",
 
   pink400: "#E478FA",
+  green400: "#47CD89",
+  error400: "#F97066",
 };

@@ -32,7 +32,7 @@ export default function GamesController() {
   const [userEndedGames] = useAtom(gamesModels.$userEndedGames);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
-  const $doLoadUserWallet = useSetAtom(coreModels.$doLoadUserData);
+  const $doLoadUserData = useSetAtom(coreModels.$doLoadUserData);
   const $doLoadActiveGames = useSetAtom(gamesModels.$doLoadActiveGames);
   const $doLoadUserEndedGames = useSetAtom(gamesModels.$doLoadUserEndedGames);
   const $doDeleteGame = useSetAtom(gamesModels.$doDeleteGame);
@@ -61,14 +61,17 @@ export default function GamesController() {
   }, [WebApp, userData]);
 
   useEffect(() => {
-    $doLoadUserWallet({ jwtToken });
+    $doLoadUserData({ jwtToken });
     $doLoadActiveGames({ jwtToken });
     $doLoadUserEndedGames({ jwtToken });
   }, []);
 
-  const onReload = async () => {
+  const onReloadLobby = async () => {
     await $doLoadActiveGames({ jwtToken });
-    await $doLoadUserWallet({ jwtToken });
+    await $doLoadUserData({ jwtToken });
+  };
+  const onReloadProfile = async () => {
+    await $doLoadUserData({ jwtToken });
   };
   const onEnterGame = (roomId: string) => {
     router.push(`/game/${roomId}?token=${jwtToken}`);
@@ -82,7 +85,7 @@ export default function GamesController() {
         <LobbyScene
           onDeleteGame={onDeleteGame}
           onEnterGame={onEnterGame}
-          onReload={onReload}
+          onReload={onReloadLobby}
           activeGames={activeGames}
           userEndedGames={userEndedGames}
           WebApp={WebApp}
@@ -90,7 +93,11 @@ export default function GamesController() {
       )}
       {activeNavTab === NavItemEnum.Leaderboard && <LeaderboardScene />}
       {activeNavTab === NavItemEnum.Profile && (
-        <WithdrawScene WebApp={WebApp} />
+        <WithdrawScene
+          onReload={onReloadProfile}
+          userData={userData}
+          WebApp={WebApp}
+        />
       )}
       {userData && (
         <BottomNav

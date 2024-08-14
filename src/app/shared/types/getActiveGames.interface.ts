@@ -5,13 +5,13 @@ export interface IGetActiveGamesRes {
   bet: string;
   roomId: string;
   creator: {
-    username?: string;
-    photo?: string;
+    username: string;
+    photo: string;
     telegramUserId: number;
   };
   joiner?: {
-    username?: string;
-    photo?: string;
+    username: string;
+    photo: string;
     telegramUserId: number;
   };
 }

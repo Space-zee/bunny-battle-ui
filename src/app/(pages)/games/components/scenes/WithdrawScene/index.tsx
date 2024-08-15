@@ -41,6 +41,14 @@ export const WithdrawScene = ({
       });
     }
   }, [isShowWithdrawWindow]);
+
+  const formatUsername = (username: string) => {
+    if (username.length > 20) {
+      return `${username.slice(0, 20)}...`;
+    } else {
+      return username;
+    }
+  };
   return (
     <Flex className={s.root} align="center" justify="center">
       <Flex
@@ -70,22 +78,22 @@ export const WithdrawScene = ({
             justify="between"
             direction="column"
           >
-            <Flex justify="between">
-              <Flex align="center" justify="center">
+            <Flex className={s.profileTopWrapper} justify="between">
+              <Flex align="center">
                 <Avatar photo={userData.photo} width={48} height={48} />
                 <Text className={s.username}>
                   @
                   {WebApp.initDataUnsafe.user?.username
-                    ? WebApp.initDataUnsafe.user?.username
+                    ? formatUsername(WebApp.initDataUnsafe.user?.username)
                     : "hidden"}
                 </Text>
               </Flex>
-              <Flex direction="column" align="end" justify="center">
+              <Box className={s.balanceWrapper}>
                 <Text className={s.totalBalanceHeader}>Total balance</Text>
                 <Text className={s.totalBalance}>
                   {formatBalance(Number(userData.balance))} ETH
                 </Text>
-              </Flex>
+              </Box>
             </Flex>
             <Button
               onClick={() => setShowWithdrawWindow(true)}

@@ -73,7 +73,7 @@ export const WithdrawWindow = ({
 
   const onWithdrawLocal = async () => {
     TgButtons.mainButton.showProgress();
-    await onWithdraw(Number(amount).toFixed(5), toAddress);
+    await onWithdraw(amount, toAddress);
     TgButtons.mainButton.hideProgress();
   };
 

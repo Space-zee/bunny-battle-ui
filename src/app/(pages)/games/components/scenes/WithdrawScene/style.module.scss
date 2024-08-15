@@ -41,6 +41,12 @@
   border-radius: 16px;
   padding: 8px;
 }
+.balanceWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: center;
+}
 
 .username {
   padding-left: 6px;
@@ -73,6 +79,20 @@
   margin-top: 8px;
   width: 100%;
   gap: 8px;
+}
+
+@media (max-width: 400px) {
+  .profileTopWrapper {
+    flex-direction: column;
+  }
+  .balanceWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+  }
 }
 
 

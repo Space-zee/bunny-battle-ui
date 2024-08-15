@@ -5,16 +5,28 @@ import { atom } from "jotai";
 import { httpClient } from "@/app/core/httpClient";
 import { IUserData } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
-import {
-  emojiToBase64,
-  getArrRandomElement,
-  TgStorage,
-} from "@/app/shared/utils";
-import { animalsEmoji } from "@/app/shared/constants";
+import { TgStorage } from "@/app/shared/utils";
+import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export const $webApp = atom<WebAppTypes | null>(null);
 export const $tgButtons = atom<TgButtons | null>(null);
 export const $tgStorage = atom<TgStorage | null>(null);
+export const $notification = atom<{
+  title: string;
+  description?: {
+    text?: string;
+    link?: string;
+    color?: string;
+  };
+  bottom?: number;
+  titleIcon: NotificationTitleIcon;
+  isOpen: boolean;
+}>({
+  titleIcon: NotificationTitleIcon.Copy,
+  title: "Alert",
+  bottom: undefined,
+  isOpen: false,
+});
 
 export const $userData = atom<IUserData | null>(null);
 
@@ -41,16 +53,14 @@ export const $doLoadUserData = atom(
         jwtToken,
       );
       if (response.data) {
-        const photo = response.data.photo
-          ? response.data.photo
-          : emojiToBase64(getArrRandomElement(animalsEmoji));
-        set($userData, {
-          ...response.data,
-          photo,
-        });
+        set($userData, response.data);
       } else {
-        //TODO:HAndle error
-        //set($globalError, { isOpen: true, description: "Unknown Error" });
+        set($notification, {
+          titleIcon: NotificationTitleIcon.Error,
+          isOpen: true,
+          title: "An error occurred",
+          description: { text: response.error },
+        });
       }
     }
   },

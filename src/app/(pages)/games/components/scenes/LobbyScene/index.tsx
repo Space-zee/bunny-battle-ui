@@ -8,6 +8,7 @@ import { WebApp } from "@twa-dev/types";
 import { IGetActiveGamesRes } from "@/app/shared/types";
 import { IGetUserEndedGameRes } from "@/app/shared/types/getUserEndedGames";
 import { EndedGame } from "@/app/(pages)/games/components/EndedGame";
+import { motion } from "framer-motion";
 
 type LobbySceneProps = {
   onReload: () => void;
@@ -29,20 +30,17 @@ export const LobbyScene = ({
   const [gamesTab, setGamesTab] = useState("active");
 
   return (
-    <Box className={s.root}>
-      <Box className={s.headerWrapper}>
+    <Flex className={s.root} direction="column" align="center" justify="center">
+      <motion.div
+        whileTap={{ scale: 0.9 }}
+        className={s.headerWrapper}
+        onClick={onReload}
+      >
         <Text className={s.header} weight="bold">
           Combat lobby
         </Text>
-        <Image
-          src={"/reload.svg"}
-          alt={"reload"}
-          width={26}
-          height={26}
-          className={s.reloadIcon}
-          onClick={onReload}
-        />
-      </Box>
+        <Image src={"/reload.svg"} alt={"reload"} width={26} height={26} />
+      </motion.div>
       <Switcher
         activeTab={gamesTab}
         tabs={[
@@ -66,6 +64,6 @@ export const LobbyScene = ({
               <EndedGame key={index} endedGame={el} />
             ))}
       </Flex>
-    </Box>
+    </Flex>
   );
 };

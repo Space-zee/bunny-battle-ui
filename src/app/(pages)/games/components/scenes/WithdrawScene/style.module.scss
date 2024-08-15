@@ -1,28 +1,126 @@
 @import "@/styles/variables";
 
-.root{
+.root {
   width: 100%;
-  text-align: center;
+}
+
+.contentWrapper {
+  width: 100%;
+
+  &.disabled {
+    opacity: .5;
+  }
 }
 
 .headerWrapper {
-  margin-bottom: 24px;
+  &:hover {
+    cursor: pointer;
+  }
+
+  display: flex;
+  align-items: center;
 }
 
 .header {
   font-size: 32px;
-  line-height: 48px;
+  font-weight: 700;
   padding-right: 6px;
 }
 
-.reloadIcon {
-  &:hover {
-    cursor: pointer;
+.profileWrapperBorder {
+  background: linear-gradient(180deg, #1F2A37 0%, rgba(31, 42, 55, 0) 100%);
+  border-radius: 16px;
+  width: 100%;
+  padding: 1px;
+  margin-top: 24px;
+}
+
+.profileWrapper {
+  background: $gray-950;
+  width: 100%;
+  border-radius: 16px;
+  padding: 8px;
+}
+.balanceWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: center;
+}
+
+.username {
+  padding-left: 6px;
+  font-size: 20px;
+  font-weight: 500;
+  color: $primary-white;
+}
+
+.totalBalanceHeader {
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-600;
+}
+
+.totalBalance {
+  font-size: 20px;
+  font-weight: 700;
+  color: $primary-white;
+}
+
+.withdrawButton {
+  border: 1px solid $gray-700;
+  background: transparent;
+  margin-top: 16px;
+  border-radius: 8px;
+  height: 40px;
+}
+
+.gamesStatsWrapper {
+  margin-top: 8px;
+  width: 100%;
+  gap: 8px;
+}
+
+@media (max-width: 400px) {
+  .profileTopWrapper {
+    flex-direction: column;
+  }
+  .balanceWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
   }
 }
 
-.gamesWrapper {
+
+//CustomBox
+
+.customBoxWrapperBorder {
+  background: linear-gradient(180deg, #1F2A37 0%, rgba(31, 42, 55, 0) 100%);
+  padding: 1px;
+  border-radius: 16px;
+  height: 82px;
   width: 100%;
-  margin-top: 12px;
-  margin-bottom: 90px;
+}
+
+.customBoxWrapper {
+  background: $gray-950;
+  border-radius: 16px;
+  height: 82px;
+  width: 100%;
+  padding: 12px 16px;
+}
+
+.customBoxHeader {
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-600;
+}
+
+.customBoxValue {
+  font-size: 24px;
+  font-weight: 700;
 }

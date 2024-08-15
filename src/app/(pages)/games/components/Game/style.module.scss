@@ -8,7 +8,7 @@
   border-radius: 16px;
   padding: 12px;
 
-  &.gameStarted{
+  &.gameStarted {
     height: auto;
     border-bottom: 4px solid $pink-400;
     border-right: 1px solid $pink-400;
@@ -17,24 +17,12 @@
   }
 }
 
-.avatarWrapper {
-  border: 2px solid $gray-700;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: $pink-800;
-  margin: 0 6px;
-
-  &.isUser {
-    border: 2px solid $pink-400;
-  }
+.avatar {
+  margin-right: 6px;
 }
 
-.avatar {
-  border-radius: 50%;
+.opponentAvatar {
+  margin-left: 6px;
 }
 
 .userName {
@@ -71,9 +59,10 @@
   padding-top: 4px;
 }
 
-.avatarsGameStarted{
+.avatarsGameStarted {
 
 }
+
 .fightButton {
   background: $primary-white;
   height: 36px;
@@ -88,7 +77,7 @@
   }
 }
 
-.backToBattleButton{
+.backToBattleButton {
   height: 40px;
   color: $black;
   background: $pink-400;
@@ -96,8 +85,7 @@
   font-size: 16px;
   font-weight: 600;
   margin-top: 12px;
-  box-shadow:
-          0px 2px 0px 0px #FFFFFF40 inset,
-          0px -2px 0px 0px #00000040 inset;
+  box-shadow: 0px 2px 0px 0px #FFFFFF40 inset,
+  0px -2px 0px 0px #00000040 inset;
 
 }

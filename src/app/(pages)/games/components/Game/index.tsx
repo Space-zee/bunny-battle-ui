@@ -5,7 +5,7 @@ import { IGetActiveGamesRes } from "@/app/shared/types";
 import { WebApp } from "@twa-dev/types";
 import Image from "next/image";
 import { RoomStatusServerEnum } from "@/app/shared/enums";
-import { MaximizeIcon } from "@/app/components";
+import { Avatar, MaximizeIcon } from "@/app/components";
 import React from "react";
 
 type GameProps = {
@@ -41,30 +41,38 @@ export const Game = ({
             {isUserGame ? (
               <React.Fragment>
                 <Avatar
-                  image={game.creator.photo}
-                  username={game.creator.username}
+                  className={s.avatar}
+                  photo={game.creator.photo}
                   isActive={true}
+                  width={32}
+                  height={32}
                 />
                 <Box>⚔</Box>
                 <Avatar
-                  image={game.joiner?.photo}
-                  username={game.joiner?.username}
+                  className={s.opponentAvatar}
+                  photo={game.joiner?.photo as string}
                   isActive={false}
+                  width={32}
+                  height={32}
                 />
                 <Text className={s.userName}>@{game.joiner?.username}</Text>
               </React.Fragment>
             ) : (
               <React.Fragment>
                 <Avatar
-                  image={game.joiner?.photo}
-                  username={game.joiner?.username}
+                  className={s.avatar}
+                  photo={game.joiner?.photo as string}
                   isActive={true}
+                  width={32}
+                  height={32}
                 />
                 <Box>⚔</Box>
                 <Avatar
-                  image={game.creator.photo}
-                  username={game.creator.username}
+                  className={s.opponentAvatar}
+                  photo={game.creator.photo}
                   isActive={false}
+                  width={32}
+                  height={32}
                 />
                 <Text className={s.userName}>@{game.creator.username}</Text>
               </React.Fragment>
@@ -73,9 +81,11 @@ export const Game = ({
         ) : (
           <Flex align="center">
             <Avatar
-              image={game.creator.photo}
-              username={game.creator.username}
+              className={s.avatar}
+              photo={game.creator.photo}
               isActive={isUserGame}
+              width={32}
+              height={32}
             />
             <Text className={clsx(s.userName, isUserGame && s.isUser)}>
               {isUserGame
@@ -121,31 +131,5 @@ export const Game = ({
         </Button>
       )}
     </Flex>
-  );
-};
-
-const Avatar = ({
-  isActive,
-  image,
-  username,
-}: {
-  isActive: boolean;
-  image?: string;
-  username?: string;
-}) => {
-  return (
-    <Box className={clsx(s.avatarWrapper, isActive && s.isUser)}>
-      {image ? (
-        <Image
-          className={s.avatar}
-          src={image}
-          alt={"creatorImage"}
-          width={32}
-          height={32}
-        />
-      ) : (
-        <Box className={s.defaultAvatar}>{username ? username[0] : "A"}</Box>
-      )}
-    </Box>
   );
 };

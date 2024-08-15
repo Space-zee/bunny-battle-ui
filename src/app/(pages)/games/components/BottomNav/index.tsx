@@ -7,14 +7,16 @@ import { NavItemEnum } from "@/app/(pages)/games/enums";
 
 type BottomNavProps = {
   activeTab: NavItemEnum;
-  onSetActiveTab: (tab: NavItemEnum) => void;
   userData: IUserData;
+  onSetActiveTab: (tab: NavItemEnum) => void;
+  onCopyWallet: (address: string) => void;
 };
 
 export const BottomNav = ({
   userData,
   activeTab,
   onSetActiveTab,
+  onCopyWallet,
 }: BottomNavProps) => {
   return (
     <Flex className={s.bottomNavBar}>
@@ -23,7 +25,7 @@ export const BottomNav = ({
         onSetActiveTab={onSetActiveTab}
         photo={userData.photo}
       />
-      <BotElement userData={userData} />
+      <BotElement onCopyWallet={onCopyWallet} userData={userData} />
     </Flex>
   );
 };

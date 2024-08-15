@@ -7,11 +7,12 @@ import { IUserData } from "@/app/shared/types";
 
 type BotElementProps = {
   userData: IUserData;
+  onCopyWallet: (address: string) => void;
 };
-export const BotElement = ({ userData }: BotElementProps) => {
+export const BotElement = ({ userData, onCopyWallet }: BotElementProps) => {
   return (
     <Flex className={s.botElement}>
-      <WalletItem userData={userData} />
+      <WalletItem onCopyWallet={onCopyWallet} userData={userData} />
       <BalanceItem userData={userData} />
     </Flex>
   );

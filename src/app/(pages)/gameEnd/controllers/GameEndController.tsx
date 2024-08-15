@@ -16,7 +16,6 @@ export default function GameEndController() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const jwtToken = searchParams.get("token");
   const roomId = searchParams.get("roomId");
 
   const [WebApp] = useAtom(coreModels.$webApp);
@@ -33,7 +32,7 @@ export default function GameEndController() {
       TgButtons.hideBackButton();
       TgButtons.showMainButton(
         () => {
-          router.push(`/games?token=${jwtToken}`);
+          router.push(`/games`);
         },
         {
           color: colors.white,
@@ -47,7 +46,6 @@ export default function GameEndController() {
 
   useEffect(() => {
     $doLoadGameResult({
-      jwtToken: jwtToken,
       roomId: roomId as string,
     });
   }, []);

@@ -2,17 +2,18 @@ import { atom } from "jotai/index";
 import { httpClient } from "@/app/core/httpClient";
 import { ICreateGameReq, ICreateGameRes } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
-import { $notification } from "@/app/core/models";
+import { $notification, $webApp } from "@/app/core/models";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export const $doCreateGame = atom(
   null,
-  async (get, set, args: { jwtToken: string | null; bet: string }) => {
-    const { jwtToken, bet } = args;
-    if (jwtToken) {
+  async (get, set, args: { bet: string }) => {
+    const { bet } = args;
+    const initData = get($webApp)?.initData;
+    if (initData) {
       const response = await httpClient.post<ICreateGameReq, ICreateGameRes>(
         apiPaths.createGame(),
-        jwtToken,
+        initData,
         { bet },
       );
       if (response.data) {

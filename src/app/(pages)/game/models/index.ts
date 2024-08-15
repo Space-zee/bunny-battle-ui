@@ -4,7 +4,7 @@ import { httpClient } from "@/app/core/httpClient";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import * as coreModels from "@/app/core/models";
 import { NotificationTitleIcon, TgStorageKeysEnum } from "@/app/shared/enums";
-import { $notification } from "@/app/core/models";
+import { $notification, $webApp } from "@/app/core/models";
 export enum GameStatusEnum {
   RabbitsSet = "rabbitsSet",
   UserTurn = "userTurn",
@@ -55,12 +55,13 @@ interface ILoadGameData {
 
 export const $doLoadGameData = atom(
   null,
-  async (get, set, args: { jwtToken: string | null; roomId: string }) => {
-    const { jwtToken, roomId } = args;
-    if (jwtToken) {
+  async (get, set, args: { roomId: string }) => {
+    const { roomId } = args;
+    const initData = get($webApp)?.initData;
+    if (initData) {
       const response = await httpClient.get<ILoadGameData>(
         apiPaths.getGameData(roomId),
-        jwtToken,
+        initData,
       );
       if (response.data) {
         const tgStorage = get(coreModels.$tgStorage);

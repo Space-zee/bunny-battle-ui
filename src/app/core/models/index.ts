@@ -43,25 +43,22 @@ export const $doLoadWebApp = atom(null, async (get, set) => {
   }
 });
 
-export const $doLoadUserData = atom(
-  null,
-  async (get, set, args: { jwtToken: string | null }) => {
-    const { jwtToken } = args;
-    if (jwtToken) {
-      const response = await httpClient.get<IUserData>(
-        apiPaths.getUserData(),
-        jwtToken,
-      );
-      if (response.data) {
-        set($userData, response.data);
-      } else {
-        set($notification, {
-          titleIcon: NotificationTitleIcon.Error,
-          isOpen: true,
-          title: "An error occurred",
-          description: { text: response.error },
-        });
-      }
+export const $doLoadUserData = atom(null, async (get, set) => {
+  const initData = get($webApp)?.initData;
+  if (initData) {
+    const response = await httpClient.get<IUserData>(
+      apiPaths.getUserData(),
+      initData,
+    );
+    if (response.data) {
+      set($userData, response.data);
+    } else {
+      set($notification, {
+        titleIcon: NotificationTitleIcon.Error,
+        isOpen: true,
+        title: "An error occurred",
+        description: { text: response.error },
+      });
     }
-  },
-);
+  }
+});

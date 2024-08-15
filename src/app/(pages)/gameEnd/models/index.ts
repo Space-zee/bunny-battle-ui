@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { httpClient } from "@/app/core/httpClient";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import { IGameResultStep } from "@/app/(pages)/gameEnd/types";
-import { $notification } from "@/app/core/models";
+import { $notification, $webApp } from "@/app/core/models";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export const $gameResult = atom<{
@@ -17,14 +17,15 @@ export const $gameResult = atom<{
 
 export const $doLoadGameResult = atom(
   null,
-  async (get, set, args: { jwtToken: string | null; roomId: string }) => {
-    const { jwtToken, roomId } = args;
-    if (jwtToken) {
+  async (get, set, args: { roomId: string }) => {
+    const { roomId } = args;
+    const initData = get($webApp)?.initData;
+    if (initData) {
       const response = await httpClient.get<{
         steps: IGameResultStep[];
         winnerAddress: string;
         gameId: number;
-      }>(apiPaths.getGameResult(roomId), jwtToken);
+      }>(apiPaths.getGameResult(roomId), initData);
       if (response.data) {
         set($gameResult, {
           steps: response.data.steps,

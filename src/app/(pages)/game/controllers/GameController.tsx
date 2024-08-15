@@ -2,7 +2,7 @@
 
 import s from "./styles.module.scss";
 import React, { useEffect } from "react";
-import { useSearchParams, useRouter, useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gameModels from "../models";
@@ -28,11 +28,8 @@ import { RoomStatusServerEnum, TgStorageKeysEnum } from "@/app/shared/enums";
 import { ICoordinates } from "@/app/shared/types";
 
 export default function GameController() {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const roomId = useParams<{ id: string }>().id;
-
-  const jwtToken = searchParams.get("token");
 
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
@@ -112,10 +109,10 @@ export default function GameController() {
       });
     } else if (data.status === RoomStatusServerEnum.Game) {
       if (data.telegramUserId === (WebApp?.initDataUnsafe.user?.id as number)) {
-        await $doLoadGameData({ jwtToken, roomId });
+        await $doLoadGameData({ roomId });
       }
     } else {
-      router.push(`/games?token=${jwtToken}`);
+      router.push(`/games`);
     }
   };
 
@@ -245,7 +242,7 @@ export default function GameController() {
 
   const onWinner = () => {
     TgButtons?.mainButton.hideProgress();
-    router.push(`/gameEnd?roomId=${roomId}&token=${jwtToken}`);
+    router.push(`/gameEnd?roomId=${roomId}`);
   };
 
   const onTimerComplete = async () => {
@@ -321,7 +318,7 @@ export default function GameController() {
     $doLoadWebApp();
     if (TgButtons) {
       TgButtons.showBackButton(() => {
-        router.push(`/games?token=${jwtToken}`);
+        router.push(`/games`);
       });
     }
 

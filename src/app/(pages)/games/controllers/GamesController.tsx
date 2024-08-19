@@ -6,7 +6,7 @@ import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gamesModels from "../models";
 import { colors } from "@/app/shared/constants";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Loader } from "@/app/components";
 import {
   LeaderboardScene,
@@ -19,9 +19,7 @@ import copy from "copy-text-to-clipboard";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export default function GamesController() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const jwtToken = searchParams.get("token");
 
   const [activeNavTab, setActiveNavTab] = useState<NavItemEnum>(
     NavItemEnum.Lobby,
@@ -42,16 +40,16 @@ export default function GamesController() {
   const $doWithdraw = useSetAtom(gamesModels.$doWithdraw);
 
   const onCreateBattle = () => {
-    router.push(`/create?token=${jwtToken}`);
+    router.push(`/create`);
   };
 
   const onWithdraw = async (amount: string, to: string) => {
-    return !!(await $doWithdraw({ amount, jwtToken, to }));
+    return !!(await $doWithdraw({ amount, to }));
   };
 
   const onDeleteGame = async (roomId: string) => {
-    await $doDeleteGame({ jwtToken, roomId });
-    $doLoadActiveGames({ jwtToken });
+    await $doDeleteGame({ roomId });
+    $doLoadActiveGames();
   };
 
   useEffect(() => {
@@ -69,22 +67,22 @@ export default function GamesController() {
   }, [WebApp, userData]);
 
   useEffect(() => {
-    $doLoadUserData({ jwtToken });
-    $doLoadActiveGames({ jwtToken });
-    $doLoadUserEndedGames({ jwtToken });
+    $doLoadUserData();
+    $doLoadActiveGames();
+    $doLoadUserEndedGames();
   }, []);
 
   const onReloadLobby = async () => {
-    await $doLoadActiveGames({ jwtToken });
-    await $doLoadUserData({ jwtToken });
+    await $doLoadActiveGames();
+    await $doLoadUserData();
   };
 
   const onReloadProfile = async () => {
-    await $doLoadUserData({ jwtToken });
+    await $doLoadUserData();
   };
 
   const onEnterGame = (roomId: string) => {
-    router.push(`/game/${roomId}?token=${jwtToken}`);
+    router.push(`/game/${roomId}`);
   };
 
   const onCopyWallet = (address: string) => {

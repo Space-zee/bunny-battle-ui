@@ -21,7 +21,7 @@ class HttpService {
   public async request<Res>(
     method: EHttpMethod,
     url: string,
-    token: string | null,
+    initData: string | null,
     options?: AxiosRequestConfig,
   ): Promise<IResponse<Res>> {
     try {
@@ -29,7 +29,7 @@ class HttpService {
         method,
         url,
         ...options,
-        headers: { ["Authorization"]: `Bearer ${token}` },
+        headers: { ["Authorization"]: `${initData}` },
       });
       return {
         success: true,
@@ -49,13 +49,13 @@ class HttpService {
 
   public async get<Res>(
     apiPaths: string,
-    token: string | null,
+    initData: string | null,
     params?: any,
   ): Promise<IResponse<Res>> {
     return this.request<Res>(
       EHttpMethod.GET,
       `${this.baseURL}${apiPaths}`,
-      token,
+      initData,
       {
         params,
       },
@@ -65,14 +65,14 @@ class HttpService {
   // Perform POST request
   public async post<Req, Res>(
     apiPaths: string,
-    token: string | null,
+    initData: string | null,
     payload: Req,
     params?: any,
   ): Promise<IResponse<Res>> {
     return this.request<Res>(
       EHttpMethod.POST,
       `${this.baseURL}${apiPaths}`,
-      token,
+      initData,
       {
         params,
         data: payload,
@@ -83,14 +83,14 @@ class HttpService {
   // Perform UPDATE request
   public async update<Req, Res>(
     apiPaths: string,
-    token: string | null,
+    initData: string | null,
     payload: Req,
     params?: any,
   ): Promise<IResponse<Res>> {
     return this.request<Res>(
       EHttpMethod.PUT,
       `${this.baseURL}${apiPaths}`,
-      token,
+      initData,
       {
         params,
         data: payload,
@@ -101,14 +101,14 @@ class HttpService {
   // Perform DELETE request
   public async delete<Req, Res>(
     apiPaths: string,
-    token: string | null,
+    initData: string | null,
     payload: Req,
     params?: any,
   ): Promise<IResponse<Res>> {
     return this.request<Res>(
       EHttpMethod.DELETE,
       `${this.baseURL}${apiPaths}`,
-      token,
+      initData,
       {
         params,
         data: payload,

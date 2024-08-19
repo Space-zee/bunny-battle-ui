@@ -4,64 +4,61 @@ import { IGetActiveGamesRes } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import { IGetUserEndedGameRes } from "@/app/shared/types/getUserEndedGames";
 import { NotificationTitleIcon } from "@/app/shared/enums";
-import { $notification } from "@/app/core/models";
+import { $notification, $webApp } from "@/app/core/models";
 import { colors } from "@/app/shared/constants";
 
 export const $activeGames = atom<IGetActiveGamesRes[]>([]);
 export const $userEndedGames = atom<IGetUserEndedGameRes[]>([]);
 
-export const $doLoadActiveGames = atom(
-  null,
-  async (get, set, args: { jwtToken: string | null }) => {
-    const { jwtToken } = args;
-    if (jwtToken) {
-      const response = await httpClient.get<IGetActiveGamesRes[]>(
-        apiPaths.getActiveGames(),
-        jwtToken,
-      );
-      if (response.data) {
-        set($activeGames, response.data);
-      } else {
-        set($notification, {
-          titleIcon: NotificationTitleIcon.Error,
-          isOpen: true,
-          title: "An error occurred",
-          description: { text: response.error },
-        });
-      }
+export const $doLoadActiveGames = atom(null, async (get, set) => {
+  const initData = get($webApp)?.initData;
+  if (initData) {
+    const response = await httpClient.get<IGetActiveGamesRes[]>(
+      apiPaths.getActiveGames(),
+      initData,
+    );
+    if (response.data) {
+      set($activeGames, response.data);
+    } else {
+      set($notification, {
+        titleIcon: NotificationTitleIcon.Error,
+        isOpen: true,
+        title: "An error occurred",
+        description: { text: response.error },
+      });
     }
-  },
-);
+  }
+});
 
-export const $doLoadUserEndedGames = atom(
-  null,
-  async (get, set, args: { jwtToken: string | null }) => {
-    const { jwtToken } = args;
-    if (jwtToken) {
-      const response = await httpClient.get<IGetUserEndedGameRes[]>(
-        apiPaths.getUserEndedGames(),
-        jwtToken,
-      );
-      if (response.data) {
-        set($userEndedGames, response.data);
-      } else {
-        set($notification, {
-          titleIcon: NotificationTitleIcon.Error,
-          isOpen: true,
-          title: "An error occurred",
-          description: { text: response.error },
-        });
-      }
+export const $doLoadUserEndedGames = atom(null, async (get, set) => {
+  const initData = get($webApp)?.initData;
+
+  if (initData) {
+    const response = await httpClient.get<IGetUserEndedGameRes[]>(
+      apiPaths.getUserEndedGames(),
+      initData,
+    );
+    if (response.data) {
+      set($userEndedGames, response.data);
+    } else {
+      set($notification, {
+        titleIcon: NotificationTitleIcon.Error,
+        isOpen: true,
+        title: "An error occurred",
+        description: { text: response.error },
+      });
     }
-  },
-);
+  }
+});
 
 export const $doDeleteGame = atom(
   null,
-  async (get, set, args: { jwtToken: string | null; roomId: string }) => {
-    const { jwtToken, roomId } = args;
-    if (jwtToken) {
-      const response = await httpClient.post(apiPaths.deleteGame(), jwtToken, {
+  async (get, set, args: { roomId: string }) => {
+    const { roomId } = args;
+    const initData = get($webApp)?.initData;
+
+    if (initData) {
+      const response = await httpClient.post(apiPaths.deleteGame(), initData, {
         roomId,
       });
       if (response.success) {
@@ -79,17 +76,14 @@ export const $doDeleteGame = atom(
 
 export const $doWithdraw = atom(
   null,
-  async (
-    get,
-    set,
-    args: { jwtToken: string | null; amount: string; to: string },
-  ) => {
-    const { jwtToken, amount, to } = args;
-    if (jwtToken) {
+  async (get, set, args: { amount: string; to: string }) => {
+    const { amount, to } = args;
+    const initData = get($webApp)?.initData;
+    if (initData) {
       const response = await httpClient.post<
         { amount: string; toAddress: string },
         { txHash: string }
-      >(apiPaths.withdrawFunds(), jwtToken, {
+      >(apiPaths.withdrawFunds(), initData, {
         amount,
         toAddress: to,
       });

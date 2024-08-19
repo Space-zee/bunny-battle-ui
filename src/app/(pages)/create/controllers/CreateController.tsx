@@ -2,7 +2,7 @@
 
 import s from "./styles.module.scss";
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as createModels from "../models";
@@ -14,10 +14,7 @@ import { Bet } from "@/app/(pages)/create/components";
 import Image from "next/image";
 
 export default function CreateController() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-
-  const jwtToken = searchParams.get("token");
 
   const [bet, setBet] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +25,7 @@ export default function CreateController() {
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
   const onBack = () => {
-    router.push(`/games?token=${jwtToken}`);
+    router.push(`/games`);
   };
 
   const onChange = (event: any) => {
@@ -36,9 +33,9 @@ export default function CreateController() {
     validateBet(value);
   };
   const onConfirm = async () => {
-    const res = await $doCreateGame({ jwtToken, bet: Number(bet).toFixed(5) });
+    const res = await $doCreateGame({ bet: Number(bet).toFixed(5) });
     if (res && res.success) {
-      router.push(`/game/${res.data?.roomId}?token=${jwtToken}`);
+      router.push(`/game/${res.data?.roomId}`);
     }
   };
 

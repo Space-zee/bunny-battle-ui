@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import styles from "./style.module.scss";
-import { NavItemEnum } from "@/app/(pages)/games/enums";
+import { NavItemEnum } from "@/app/(pages)/main/enums";
 
 interface SVGItemProps {
   isActive: boolean;

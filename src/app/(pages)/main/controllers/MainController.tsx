@@ -12,13 +12,13 @@ import {
   LeaderboardScene,
   LobbyScene,
   WithdrawScene,
-} from "@/app/(pages)/games/components";
-import { BottomNav } from "@/app/(pages)/games/components/BottomNav";
-import { NavItemEnum } from "@/app/(pages)/games/enums";
+} from "@/app/(pages)/main/components";
+import { BottomNav } from "@/app/(pages)/main/components/BottomNav";
+import { NavItemEnum } from "@/app/(pages)/main/enums";
 import copy from "copy-text-to-clipboard";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 
-export default function GamesController() {
+export default function MainController() {
   const router = useRouter();
 
   const [activeNavTab, setActiveNavTab] = useState<NavItemEnum>(

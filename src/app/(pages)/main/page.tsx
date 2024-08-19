@@ -1,11 +1,11 @@
 import React, { Suspense } from "react";
 import { Loader } from "@/app/components";
-import GamesController from "@/app/(pages)/games/controllers/GamesController";
+import MainController from "@/app/(pages)/main/controllers/MainController";
 
-export default function Games() {
+export default function Main() {
   return (
     <Suspense fallback={<Loader />}>
-      <GamesController />
+      <MainController />
     </Suspense>
   );
 }

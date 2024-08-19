@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { Avatar } from "@/app/components";
 import { formatBalance, TgButtons } from "@/app/shared/utils";
 import { colors } from "@/app/shared/constants";
-import { WithdrawWindow } from "@/app/(pages)/games/components/WithdrawWindow";
+import { WithdrawWindow } from "@/app/(pages)/main/components/WithdrawWindow";
 import clsx from "clsx";
 
 type WithdrawSceneProps = {

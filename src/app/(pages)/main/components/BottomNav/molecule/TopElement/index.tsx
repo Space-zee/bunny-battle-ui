@@ -5,7 +5,7 @@ import { Box, Flex } from "@radix-ui/themes";
 import { LottieItem } from "../../atoms/LottieItem";
 import { AvatarItem } from "../../atoms/AvatarItem";
 import { SVGItem } from "../../atoms/SVGItem";
-import { NavItemEnum } from "@/app/(pages)/games/enums";
+import { NavItemEnum } from "@/app/(pages)/main/enums";
 
 interface NavItem {
   id: NavItemEnum;

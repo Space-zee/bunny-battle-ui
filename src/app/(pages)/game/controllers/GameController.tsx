@@ -112,7 +112,7 @@ export default function GameController() {
         await $doLoadGameData({ roomId });
       }
     } else {
-      router.push(`/games`);
+      router.push(`/main`);
     }
   };
 
@@ -318,7 +318,7 @@ export default function GameController() {
     $doLoadWebApp();
     if (TgButtons) {
       TgButtons.showBackButton(() => {
-        router.push(`/games`);
+        router.push(`/main`);
       });
     }
 

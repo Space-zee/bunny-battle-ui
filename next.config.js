@@ -7,6 +7,7 @@ const nextConfig = {
   },
   env: {
     API_BASE_URL: process.env.API_BASE_URL,
+    CHAIN_ID: process.env.CHAIN_ID,
   },
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],

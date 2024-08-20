@@ -72,9 +72,11 @@ export const WithdrawWindow = ({
   }, [onClose]);
 
   const onWithdrawLocal = async () => {
+    TgButtons.mainButton.disable();
     TgButtons.mainButton.showProgress();
     await onWithdraw(amount, toAddress);
     TgButtons.mainButton.hideProgress();
+    TgButtons.mainButton.enable();
   };
 
   useEffect(() => {

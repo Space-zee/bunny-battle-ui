@@ -11,6 +11,8 @@ import { Loader } from "@/app/components";
 import { Box, Text, Flex } from "@radix-ui/themes";
 import Image from "next/image";
 import { coordinatesToIndex } from "@/app/shared/utils";
+import { networks } from "@/app/shared/configs/networks";
+import { ChainIdEnum } from "@/app/shared/enums";
 
 export default function GameEndController() {
   const searchParams = useSearchParams();
@@ -52,7 +54,7 @@ export default function GameEndController() {
 
   return (
     <main className={s.main}>
-      {!gameResult.steps.length ? (
+      {!gameResult.winner ? (
         <Loader />
       ) : (
         <Flex>
@@ -128,7 +130,9 @@ export default function GameEndController() {
             align="center"
             className={s.openTx}
             onClick={() =>
-              WebApp?.openLink(`https://sepolia.scrollscan.com/tx/${el.hash}`)
+              WebApp?.openLink(
+                `${networks[process.env.CHAIN_ID as unknown as ChainIdEnum].explorer}tx/${el.hash}`,
+              )
             }
           >
             <Text className={s.goToTxn}>go to txn</Text>

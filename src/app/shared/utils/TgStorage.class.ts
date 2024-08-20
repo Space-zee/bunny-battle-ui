@@ -13,6 +13,11 @@ export class TgStorage {
     this.cloudStorage.setItem(tkKey, tgValue);
   };
 
+  removeValue = (tgUserId: number, key: string) => {
+    const tkKey = `${tgUserId}_${key}`;
+    this.cloudStorage.removeItem(tkKey);
+  };
+
   getInfo = <T>(tgUserId: number, key: string): Promise<T> => {
     const tkKey = `${tgUserId}_${key}`;
 

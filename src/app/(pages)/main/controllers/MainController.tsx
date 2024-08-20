@@ -116,7 +116,6 @@ export default function MainController() {
           TgButtons={TgButtons}
           onReload={onReloadProfile}
           userData={userData}
-          WebApp={WebApp}
         />
       )}
       {userData && (

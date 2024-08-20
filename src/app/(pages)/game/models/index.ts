@@ -3,8 +3,9 @@ import { ICoordinates, ICoordinatesWithHit } from "@/app/shared/types";
 import { httpClient } from "@/app/core/httpClient";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import * as coreModels from "@/app/core/models";
-import { NotificationTitleIcon, TgStorageKeysEnum } from "@/app/shared/enums";
+import { NotificationTitleIcon } from "@/app/shared/enums";
 import { $notification, $webApp } from "@/app/core/models";
+import { storageKeys } from "@/app/shared/constants";
 export enum GameStatusEnum {
   RabbitsSet = "rabbitsSet",
   UserTurn = "userTurn",
@@ -68,7 +69,7 @@ export const $doLoadGameData = atom(
         const webApp = get(coreModels.$webApp);
         const userRabbits: ICoordinates[] = (await tgStorage?.getInfo(
           webApp?.initDataUnsafe.user?.id as number,
-          TgStorageKeysEnum.UserRabbits,
+          storageKeys.rabbits(response.data.gameId.toString()),
         )) as ICoordinates[];
         const {
           gameId,
@@ -86,9 +87,10 @@ export const $doLoadGameData = atom(
           isCreator,
           isScCreated,
           steps: userSteps,
-          status: isUserTurn
-            ? GameStatusEnum.UserTurn
-            : GameStatusEnum.OpponentTurn,
+          status:
+            !isUserTurn && moveDeadline < Number(Date.now())
+              ? GameStatusEnum.UserTurn
+              : GameStatusEnum.OpponentTurn,
           myRabbits: userRabbits,
           bet,
           moveDeadline,

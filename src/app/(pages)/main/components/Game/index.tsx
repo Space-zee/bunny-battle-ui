@@ -7,6 +7,7 @@ import Image from "next/image";
 import { RoomStatusServerEnum } from "@/app/shared/enums";
 import { Avatar, MaximizeIcon } from "@/app/components";
 import React from "react";
+import { getUsernameStr } from "@/app/shared/utils";
 
 type GameProps = {
   game: IGetActiveGamesRes;
@@ -55,7 +56,9 @@ export const Game = ({
                   width={32}
                   height={32}
                 />
-                <Text className={s.userName}>@{game.joiner?.username}</Text>
+                <Text className={s.userName}>
+                  {getUsernameStr(game.joiner?.username as string)}
+                </Text>
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -74,7 +77,9 @@ export const Game = ({
                   width={32}
                   height={32}
                 />
-                <Text className={s.userName}>@{game.creator.username}</Text>
+                <Text className={s.userName}>
+                  {getUsernameStr(game.creator.username)}
+                </Text>
               </React.Fragment>
             )}
           </Flex>
@@ -88,9 +93,7 @@ export const Game = ({
               height={32}
             />
             <Text className={clsx(s.userName, isUserGame && s.isUser)}>
-              {isUserGame
-                ? "You"
-                : `@${game.creator.username ? game.creator.username : "A"}`}
+              {isUserGame ? "You" : getUsernameStr(game.creator.username)}
             </Text>
           </Flex>
         )}

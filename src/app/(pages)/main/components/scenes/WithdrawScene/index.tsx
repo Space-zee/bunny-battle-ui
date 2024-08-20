@@ -6,7 +6,7 @@ import { WebApp } from "@twa-dev/types";
 import { IUserData } from "@/app/shared/types";
 import { motion } from "framer-motion";
 import { Avatar } from "@/app/components";
-import { formatBalance, TgButtons } from "@/app/shared/utils";
+import { formatBalance, getUsernameStr, TgButtons } from "@/app/shared/utils";
 import { colors } from "@/app/shared/constants";
 import { WithdrawWindow } from "@/app/(pages)/main/components/WithdrawWindow";
 import clsx from "clsx";
@@ -82,10 +82,7 @@ export const WithdrawScene = ({
               <Flex align="center">
                 <Avatar photo={userData.photo} width={48} height={48} />
                 <Text className={s.username}>
-                  @
-                  {WebApp.initDataUnsafe.user?.username
-                    ? formatUsername(WebApp.initDataUnsafe.user?.username)
-                    : "hidden"}
+                  {formatUsername(getUsernameStr(userData.username))}
                 </Text>
               </Flex>
               <Box className={s.balanceWrapper}>

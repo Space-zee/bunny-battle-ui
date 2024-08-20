@@ -32,7 +32,7 @@ export default function GameEndController() {
       TgButtons.hideBackButton();
       TgButtons.showMainButton(
         () => {
-          router.push(`/games`);
+          router.push(`/main`);
         },
         {
           color: colors.white,
@@ -71,7 +71,7 @@ export default function GameEndController() {
               <Box className={s.prizePoolWrapper}>
                 <Text className={s.youGot}>You got</Text>
                 <br />
-                <Text className={s.prizePool}>0.11 ETH</Text>
+                <Text className={s.prizePool}>{gameResult.prize} ETH</Text>
               </Box>
               <Box className={s.gameIdHeader}>
                 <span className={s.gameId}>#{gameResult.gameId}</span>{" "}

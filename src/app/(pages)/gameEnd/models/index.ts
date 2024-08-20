@@ -5,14 +5,18 @@ import { IGameResultStep } from "@/app/(pages)/gameEnd/types";
 import { $notification, $webApp } from "@/app/core/models";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 
-export const $gameResult = atom<{
+interface IGameResult {
   steps: IGameResultStep[];
   winner: string;
   gameId: number;
-}>({
+  prize: string;
+}
+
+export const $gameResult = atom<IGameResult>({
   steps: [],
   winner: "",
   gameId: 1,
+  prize: "0.001",
 });
 
 export const $doLoadGameResult = atom(
@@ -21,16 +25,16 @@ export const $doLoadGameResult = atom(
     const { roomId } = args;
     const initData = get($webApp)?.initData;
     if (initData) {
-      const response = await httpClient.get<{
-        steps: IGameResultStep[];
-        winnerAddress: string;
-        gameId: number;
-      }>(apiPaths.getGameResult(roomId), initData);
+      const response = await httpClient.get<IGameResult>(
+        apiPaths.getGameResult(roomId),
+        initData,
+      );
       if (response.data) {
         set($gameResult, {
           steps: response.data.steps,
-          winner: response.data.winnerAddress,
+          winner: response.data.winner,
           gameId: response.data.gameId,
+          prize: response.data.prize,
         });
       } else {
         set($notification, {

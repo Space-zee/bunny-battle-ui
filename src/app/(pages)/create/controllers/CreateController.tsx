@@ -25,7 +25,7 @@ export default function CreateController() {
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
   const onBack = () => {
-    router.push(`/games`);
+    router.push(`/main`);
   };
 
   const onChange = (event: any) => {

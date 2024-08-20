@@ -3,9 +3,10 @@ import { httpClient } from "@/app/core/httpClient";
 import { IGetActiveGamesRes } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import { IGetUserEndedGameRes } from "@/app/shared/types/getUserEndedGames";
-import { NotificationTitleIcon } from "@/app/shared/enums";
+import { ChainIdEnum, NotificationTitleIcon } from "@/app/shared/enums";
 import { $notification, $webApp } from "@/app/core/models";
 import { colors } from "@/app/shared/constants";
+import { networks } from "@/app/shared/configs/networks";
 
 export const $activeGames = atom<IGetActiveGamesRes[]>([]);
 export const $userEndedGames = atom<IGetUserEndedGameRes[]>([]);
@@ -94,7 +95,7 @@ export const $doWithdraw = atom(
           title: "Transaction confirmed",
           description: {
             text: response.data?.txHash,
-            link: `https://sepolia.scrollscan.com/tx/${response.data?.txHash}`,
+            link: `${networks[process.env.CHAIN_ID as unknown as ChainIdEnum].explorer}tx/${response.data?.txHash}`,
             color: colors.pink400,
           },
         });

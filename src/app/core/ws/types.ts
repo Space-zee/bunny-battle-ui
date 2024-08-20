@@ -14,7 +14,7 @@ export interface IJoinRoomRes {
   bet: string;
   roomId: string;
   creatorName: string;
-  opponentName?: string;
+  joinerName?: string;
   roomCreatorId: number;
 }
 
@@ -24,7 +24,7 @@ export interface IReadyForBattle {
   bet: string;
   roomId: string;
   creatorName: string;
-  opponentName: string;
+  joinerName: string;
   roomCreatorId: number;
 }
 

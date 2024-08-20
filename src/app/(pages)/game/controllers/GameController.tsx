@@ -2,10 +2,11 @@
 
 import s from "./styles.module.scss";
 import React, { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gameModels from "../models";
+import { GameStatusEnum, IGame } from "../models";
 import { Field } from "../components/Field";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
@@ -20,11 +21,13 @@ import {
   IUserMoveReq,
   IUserMoveRes,
 } from "@/app/core/ws/types";
-import { GameStatusEnum, IGame } from "../models";
-import { colors } from "@/app/shared/constants";
+import { colors, storageKeys } from "@/app/shared/constants";
 import Countdown from "react-countdown";
 import { Loader } from "@/app/components";
-import { RoomStatusServerEnum, TgStorageKeysEnum } from "@/app/shared/enums";
+import {
+  NotificationTitleIcon,
+  RoomStatusServerEnum,
+} from "@/app/shared/enums";
 import { ICoordinates } from "@/app/shared/types";
 
 export default function GameController() {
@@ -34,9 +37,10 @@ export default function GameController() {
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [TgStorage] = useAtom(coreModels.$tgStorage);
+  const [, setNotification] = useAtom(coreModels.$notification);
   const [game, setGame] = useAtom(gameModels.$game);
   const $doLoadGameData = useSetAtom(gameModels.$doLoadGameData);
-  const prizePool = Number(game?.bet) + Number(game?.bet) * 0.99;
+  const prizePool = Number(game?.bet) * 2 * 0.99;
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
 
@@ -54,7 +58,7 @@ export default function GameController() {
           data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
             ? data.isGameCreated
               ? undefined
-              : data.opponentName
+              : data.joinerName
             : data.creatorName,
         isInRoom: true,
       },
@@ -72,10 +76,11 @@ export default function GameController() {
     socket.emit(SocketEvents.ClientRabbitsSet, res);
     TgStorage?.saveInfo(
       WebApp?.initDataUnsafe.user?.id as number,
-      TgStorageKeysEnum.UserRabbits,
+      storageKeys.rabbits(game.gameId.toString()),
       game.myRabbits,
     );
     TgButtons?.mainButton.showProgress();
+    TgButtons?.mainButton.disable();
   };
 
   const joinRoom = (data: IJoinRoomReq) => {
@@ -83,13 +88,33 @@ export default function GameController() {
   };
 
   const onLeaveRoom = () => {
-    setGame((prevState) => ({
-      ...prevState,
-      opponent: { ...prevState.opponent, isInRoom: false },
-    }));
+    setGame((prevState) => {
+      if (prevState.status === GameStatusEnum.RabbitsSet) {
+        setNotification({
+          isOpen: true,
+          title: `${prevState.opponent.userName} leaved the room`,
+          titleIcon: NotificationTitleIcon.Warning,
+        });
+      }
+      return {
+        ...prevState,
+        opponent: { userName: undefined, steps: [], isInRoom: false },
+      };
+    });
   };
 
   const onJoinRoomRes = async (data: IJoinRoomRes) => {
+    if (
+      data.telegramUserId !== (WebApp?.initDataUnsafe.user?.id as number) &&
+      !data.isGameCreated
+    ) {
+      setNotification({
+        isOpen: true,
+        title: `${data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number) ? data.joinerName : data.creatorName} joined the room`,
+        titleIcon: NotificationTitleIcon.Warning,
+      });
+    }
+
     if (data.status === RoomStatusServerEnum.Active) {
       setGame({
         moveDeadline: 0,
@@ -102,7 +127,10 @@ export default function GameController() {
         bet: data.bet,
         opponent: {
           steps: [],
-          userName: data.opponentName,
+          userName:
+            data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
+              ? data.joinerName
+              : data.creatorName,
           isInRoom: false,
         },
         steps: [],
@@ -122,16 +150,18 @@ export default function GameController() {
       isScCreated: true,
     }));
     TgButtons?.mainButton.hideProgress();
+    TgButtons?.mainButton.enable();
   };
 
   const onGameStarted = async (data: {
     moveDeadline: number;
     opponentName: string;
     creatorName: string;
+    gameId: number;
   }) => {
     const myRabbits = (await TgStorage?.getInfo(
       WebApp?.initDataUnsafe.user?.id as number,
-      TgStorageKeysEnum.UserRabbits,
+      storageKeys.rabbits(data.gameId.toString()),
     )) as ICoordinates[];
     setGame((prevState) => ({
       ...prevState,
@@ -146,6 +176,7 @@ export default function GameController() {
       },
     }));
     TgButtons?.mainButton.hideProgress();
+    TgButtons?.mainButton.enable();
     TgButtons?.showMainButton(onMove, {
       color: colors.pink400,
       text_color: colors.black,
@@ -157,6 +188,7 @@ export default function GameController() {
   const onMove = () => {
     if (game.currentStep) {
       TgButtons?.mainButton.showProgress();
+      TgButtons?.mainButton.disable();
       const data: IUserMoveReq = {
         roomId,
         telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
@@ -181,6 +213,7 @@ export default function GameController() {
 
   const onConfirmWin = () => {
     TgButtons?.mainButton.showProgress();
+    TgButtons?.mainButton.disable();
     socket.emit(SocketEvents.ConfirmWin, {
       roomId,
       telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
@@ -189,6 +222,7 @@ export default function GameController() {
 
   const onServerUserMove = (data: IUserMoveRes) => {
     TgButtons?.mainButton.hideProgress();
+    TgButtons?.mainButton.enable();
     if (data.lastMove) {
       if (data.telegramUserId !== (WebApp?.initDataUnsafe.user?.id as number)) {
         setGame((prevState) => {
@@ -242,10 +276,15 @@ export default function GameController() {
 
   const onWinner = () => {
     TgButtons?.mainButton.hideProgress();
+    TgButtons?.mainButton.enable();
+    TgStorage?.removeValue(
+      WebApp?.initDataUnsafe.user?.id as number,
+      storageKeys.rabbits(game.gameId.toString()),
+    );
     router.push(`/gameEnd?roomId=${roomId}`);
   };
 
-  const onTimerComplete = async () => {
+  const onTimerComplete = () => {
     if (game.status === GameStatusEnum.OpponentTurn) {
       socket.emit(SocketEvents.CheckDeadlineClient, {
         roomId,
@@ -276,6 +315,16 @@ export default function GameController() {
     });
   };
 
+  const onTxFailed = () => {
+    setNotification({
+      isOpen: true,
+      title: `Your transaction failed, please try again.`,
+      titleIcon: NotificationTitleIcon.Error,
+    });
+    TgButtons?.mainButton.hideProgress();
+    TgButtons?.mainButton.enable();
+  };
+
   useEffect(() => {
     socket.on(`${SocketEvents.JoinRoomServer}:${roomId}`, onJoinRoomRes);
     socket.on(`${SocketEvents.ReadyForBattle}:${roomId}`, onReadyForBattle);
@@ -285,6 +334,10 @@ export default function GameController() {
     socket.on(`${SocketEvents.CheckDeadlineServer}:${roomId}`, onCheckDeadline);
     socket.on(`${SocketEvents.Winner}:${roomId}`, onWinner);
     socket.on(`${SocketEvents.LeaveRoomServer}:${roomId}`, onLeaveRoom);
+    socket.on(
+      `${SocketEvents.TxFailed}:${roomId}:${WebApp?.initDataUnsafe.user?.id as number}`,
+      onTxFailed,
+    );
 
     return () => {
       socket.off(`${SocketEvents.JoinRoomServer}:${roomId}`, onJoinRoomRes);
@@ -294,6 +347,10 @@ export default function GameController() {
       socket.off(`${SocketEvents.ServerUserMove}:${roomId}`, onServerUserMove);
       socket.off(`${SocketEvents.Winner}:${roomId}`, onWinner);
       socket.off(`${SocketEvents.LeaveRoomServer}:${roomId}`, onLeaveRoom);
+      socket.off(
+        `${SocketEvents.TxFailed}:${roomId}:${WebApp?.initDataUnsafe.user?.id as number}`,
+        onTxFailed,
+      );
 
       socket.emit(SocketEvents.LeaveRoomClient, {
         roomId,
@@ -318,6 +375,18 @@ export default function GameController() {
     $doLoadWebApp();
     if (TgButtons) {
       TgButtons.showBackButton(() => {
+        setGame({
+          moveDeadline: 0,
+          gameId: 1,
+          myRabbits: [],
+          steps: [],
+          status: GameStatusEnum.UserTurn,
+          isScCreated: false,
+          opponent: {
+            isInRoom: false,
+            steps: [],
+          },
+        });
         router.push(`/main`);
       });
     }
@@ -327,17 +396,6 @@ export default function GameController() {
       telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
     });
   }, [WebApp]);
-
-  useEffect(() => {
-    if (game) {
-      TgButtons?.showMainButton(onCreateBattle, {
-        color: colors.pink400,
-        text_color: colors.black,
-        text: `Sent ${game.bet}`,
-        is_active: false,
-      });
-    }
-  }, [game.bet]);
 
   useEffect(() => {
     if (game.status === GameStatusEnum.RabbitsSet) {
@@ -353,7 +411,7 @@ export default function GameController() {
           TgButtons?.showMainButton(onCreateBattle, {
             color: colors.pink400,
             text_color: colors.black,
-            text: `Sent ${game.bet}`,
+            text: `Sent ${game.bet ? game.bet : 0}`,
             is_active: game.opponent.isInRoom && game.myRabbits.length === 2,
           });
         }
@@ -361,7 +419,7 @@ export default function GameController() {
         TgButtons?.showMainButton(onCreateBattle, {
           color: colors.pink400,
           text_color: colors.black,
-          text: `Sent ${game.bet}`,
+          text: `Sent ${game.bet ? game.bet : 0}`,
           is_active: game.isScCreated && game.myRabbits.length === 2,
         });
       }
@@ -402,7 +460,6 @@ export default function GameController() {
           width={26}
           height={26}
           className={s.reloadIcon}
-          //onClick={() => $doLoadActiveGames({ jwtToken })}
         />
       </Flex>
       <Flex
@@ -444,7 +501,11 @@ export default function GameController() {
               : "🤞 Opponent’s turn"}
           </Text>
           <Countdown
-            onComplete={onTimerComplete}
+            onComplete={() => {
+              if (game.moveDeadline > Number(Date.now())) {
+                onTimerComplete();
+              }
+            }}
             date={game.moveDeadline}
             renderer={(props) => (
               <Box className={s.timer}>

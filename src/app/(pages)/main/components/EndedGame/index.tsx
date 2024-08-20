@@ -10,7 +10,7 @@ type EndedGameProps = {
 };
 
 export const EndedGame = ({ endedGame }: EndedGameProps) => {
-  const prizePool = Number(endedGame.bet) + Number(endedGame.bet) * 0.99;
+  const prizePool = Number(endedGame.bet) * 2 * 0.99;
   return (
     <Flex className={clsx(s.root)} direction="column" align="start">
       <Flex justify="between" className={clsx(s.userWrapper, s.loser)}>

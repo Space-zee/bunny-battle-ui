@@ -2,7 +2,6 @@ import s from "./style.module.scss";
 import { Button, Text, Flex, Box } from "@radix-ui/themes";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { WebApp } from "@twa-dev/types";
 import { IUserData } from "@/app/shared/types";
 import { motion } from "framer-motion";
 import { Avatar } from "@/app/components";
@@ -12,7 +11,6 @@ import { WithdrawWindow } from "@/app/(pages)/main/components/WithdrawWindow";
 import clsx from "clsx";
 
 type WithdrawSceneProps = {
-  WebApp: WebApp;
   TgButtons: TgButtons;
   userData: IUserData;
   onReload: () => void;
@@ -21,7 +19,6 @@ type WithdrawSceneProps = {
 };
 
 export const WithdrawScene = ({
-  WebApp,
   userData,
   onReload,
   TgButtons,

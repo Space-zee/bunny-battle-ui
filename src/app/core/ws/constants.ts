@@ -13,4 +13,5 @@ export enum SocketEvents {
   Winner = "winner",
   LeaveRoomClient = "leaveRoomClient",
   LeaveRoomServer = "leaveRoomServer",
+  TxFailed = "txFailed",
 }

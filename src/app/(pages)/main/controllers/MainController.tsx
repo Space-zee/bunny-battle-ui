@@ -17,6 +17,7 @@ import { BottomNav } from "@/app/(pages)/main/components/BottomNav";
 import { NavItemEnum } from "@/app/(pages)/main/enums";
 import copy from "copy-text-to-clipboard";
 import { NotificationTitleIcon } from "@/app/shared/enums";
+import { $doLoadEstimatedGameGasCost } from "@/app/core/models";
 
 export default function MainController() {
   const router = useRouter();
@@ -34,6 +35,9 @@ export default function MainController() {
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadUserData = useSetAtom(coreModels.$doLoadUserData);
+  const $doLoadEstimatedGameGasCost = useSetAtom(
+    coreModels.$doLoadEstimatedGameGasCost,
+  );
   const $doLoadActiveGames = useSetAtom(gamesModels.$doLoadActiveGames);
   const $doLoadUserEndedGames = useSetAtom(gamesModels.$doLoadUserEndedGames);
   const $doDeleteGame = useSetAtom(gamesModels.$doDeleteGame);
@@ -83,6 +87,7 @@ export default function MainController() {
   const onReloadLobby = async () => {
     await $doLoadActiveGames();
     await $doLoadUserData();
+    // await $doLoadEstimatedGameGasCost();
   };
 
   const onReloadProfile = async () => {

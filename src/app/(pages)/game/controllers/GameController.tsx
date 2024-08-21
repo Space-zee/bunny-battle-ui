@@ -112,7 +112,7 @@ export default function GameController() {
       setNotification({
         isOpen: true,
         title: `${data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number) ? data.joinerName : data.creatorName} joined the room`,
-        titleIcon: NotificationTitleIcon.Warning,
+        titleIcon: NotificationTitleIcon.UserJoin,
       });
     }
 

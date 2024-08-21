@@ -7,7 +7,7 @@ import Image from "next/image";
 import { RoomStatusServerEnum } from "@/app/shared/enums";
 import { Avatar, MaximizeIcon } from "@/app/components";
 import React from "react";
-import { getUsernameStr } from "@/app/shared/utils";
+import { formatBalance, getUsernameStr } from "@/app/shared/utils";
 
 type GameProps = {
   game: IGetActiveGamesRes;
@@ -98,7 +98,7 @@ export const Game = ({
           </Flex>
         )}
         <Flex align="center">
-          <Text className={s.bet}>{game.bet} ETH</Text>
+          <Text className={s.bet}>{formatBalance(Number(game.bet))} ETH</Text>
           {isUserGameStarted ? (
             ""
           ) : isUserGame ? (

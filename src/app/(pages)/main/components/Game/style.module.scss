@@ -21,6 +21,11 @@
   margin-right: 6px;
 }
 
+.Avataritem {
+  max-width: 50%; /* Adjust as needed */
+  overflow: hidden;
+}
+
 .opponentAvatar {
   margin-left: 6px;
 }
@@ -28,6 +33,10 @@
 .userName {
   font-size: 14px;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 
   &.isUser {
     color: $pink-400;
@@ -35,6 +44,7 @@
 }
 
 .bet {
+  display: block;
   font-size: 16px;
   font-weight: 500;
   color: $pink-400;
@@ -60,7 +70,6 @@
 }
 
 .avatarsGameStarted {
-
 }
 
 .fightButton {
@@ -85,7 +94,7 @@
   font-size: 16px;
   font-weight: 600;
   margin-top: 12px;
-  box-shadow: 0px 2px 0px 0px #FFFFFF40 inset,
-  0px -2px 0px 0px #00000040 inset;
-
+  box-shadow:
+    0px 2px 0px 0px #ffffff40 inset,
+    0px -2px 0px 0px #00000040 inset;
 }

@@ -84,7 +84,7 @@ export const Game = ({
             )}
           </Flex>
         ) : (
-          <Flex align="center">
+          <Flex align="center" className={s.Avataritem}>
             <Avatar
               className={s.avatar}
               photo={game.creator.photo}

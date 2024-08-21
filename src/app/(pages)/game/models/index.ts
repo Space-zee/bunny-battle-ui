@@ -13,6 +13,7 @@ export enum GameStatusEnum {
 }
 
 export interface IGame {
+  isDisableField: boolean;
   gameId: number;
   moveDeadline: number;
   isScCreated: boolean;
@@ -31,6 +32,7 @@ export interface IGame {
 
 export const $game = atom<IGame>({
   moveDeadline: 0,
+  isDisableField: false,
   gameId: 1,
   myRabbits: [],
   steps: [],
@@ -83,6 +85,7 @@ export const $doLoadGameData = atom(
           isScCreated,
         } = response.data;
         set($game, {
+          isDisableField: false,
           gameId,
           isCreator,
           isScCreated,

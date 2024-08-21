@@ -29,10 +29,6 @@ const cellInnerConfig: Partial<Record<CellStatusEnum, string | JSX.Element>> = {
 export const Cell = ({ index, onChangeGame, game }: CellProps) => {
   const cellState: CellStatusEnum = useMemo(() => {
     const cellCoordinates = gridIndexToCoordinates(index);
-
-    // const moveByCoordinates = game.steps?.find((move) =>
-    //   compareCoordinates(cellCoordinates, { x: move.x, y: move.y }),
-    // );
     if (game.status === GameStatusEnum.RabbitsSet) {
       if (!game.isScCreated) {
         if (
@@ -42,15 +38,15 @@ export const Cell = ({ index, onChangeGame, game }: CellProps) => {
         ) {
           return CellStatusEnum.Set;
         }
-      } else if (!game.isCreator) {
-        if (
-          game.myRabbits?.find((item) =>
-            compareCoordinates(item, cellCoordinates),
-          )
-        ) {
-          return CellStatusEnum.Set;
-        }
       }
+      if (
+        game.myRabbits?.find((item) =>
+          compareCoordinates(item, cellCoordinates),
+        )
+      ) {
+        return CellStatusEnum.Set;
+      }
+
       return CellStatusEnum.Default;
     }
 

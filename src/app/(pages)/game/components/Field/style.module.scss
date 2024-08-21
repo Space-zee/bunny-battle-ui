@@ -5,4 +5,10 @@
   background: $gray-900;
   border-radius: 16px;
   padding: 6px;
+
+  &.disabled{
+    pointer-events: none;
+    opacity: .6;
+  }
 }
+

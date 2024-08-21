@@ -40,7 +40,15 @@ export default function MainController() {
   const $doWithdraw = useSetAtom(gamesModels.$doWithdraw);
 
   const onCreateBattle = () => {
-    router.push(`/create`);
+    if (userData?.isActiveGames) {
+      setNotification({
+        isOpen: true,
+        titleIcon: NotificationTitleIcon.Warning,
+        title: "You already have active games",
+      });
+    } else {
+      router.push(`/create`);
+    }
   };
 
   const onWithdraw = async (amount: string, to: string) => {

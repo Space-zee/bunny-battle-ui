@@ -5,4 +5,5 @@ export interface IUserData {
   username: string;
   wins: number;
   loses: number;
+  isActiveGames: boolean;
 }

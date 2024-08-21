@@ -73,6 +73,7 @@ export default function GameController() {
       telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
       rabbits: game.myRabbits,
     };
+    setGame((prevState) => ({ ...prevState, isDisableField: true }));
     socket.emit(SocketEvents.ClientRabbitsSet, res);
     TgStorage?.saveInfo(
       WebApp?.initDataUnsafe.user?.id as number,
@@ -111,12 +112,13 @@ export default function GameController() {
       setNotification({
         isOpen: true,
         title: `${data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number) ? data.joinerName : data.creatorName} joined the room`,
-        titleIcon: NotificationTitleIcon.Warning,
+        titleIcon: NotificationTitleIcon.UserJoin,
       });
     }
 
     if (data.status === RoomStatusServerEnum.Active) {
       setGame({
+        isDisableField: false,
         moveDeadline: 0,
         status: GameStatusEnum.RabbitsSet,
         isScCreated: data.isGameCreated,
@@ -135,6 +137,31 @@ export default function GameController() {
         },
         steps: [],
       });
+    } else if (data.status === RoomStatusServerEnum.WaitingGameJoin) {
+      const myRabbits = (await TgStorage?.getInfo(
+        WebApp?.initDataUnsafe.user?.id as number,
+        storageKeys.rabbits(data.gameId.toString()),
+      )) as ICoordinates[];
+      setGame({
+        isDisableField: false,
+        moveDeadline: 0,
+        status: GameStatusEnum.RabbitsSet,
+        isScCreated: data.isGameCreated,
+        gameId: data.gameId,
+        myRabbits: myRabbits || [],
+        isCreator:
+          data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number),
+        bet: data.bet,
+        opponent: {
+          steps: [],
+          userName:
+            data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
+              ? data.joinerName
+              : data.creatorName,
+          isInRoom: true,
+        },
+        steps: [],
+      });
     } else if (data.status === RoomStatusServerEnum.Game) {
       if (data.telegramUserId === (WebApp?.initDataUnsafe.user?.id as number)) {
         await $doLoadGameData({ roomId });
@@ -148,6 +175,7 @@ export default function GameController() {
     setGame((prevState) => ({
       ...prevState,
       isScCreated: true,
+      isDisableField: false,
     }));
     TgButtons?.mainButton.hideProgress();
     TgButtons?.mainButton.enable();
@@ -174,6 +202,7 @@ export default function GameController() {
         ...prevState.opponent,
         userName: prevState.isCreator ? data.opponentName : data.creatorName,
       },
+      isDisableField: false,
     }));
     TgButtons?.mainButton.hideProgress();
     TgButtons?.mainButton.enable();
@@ -198,6 +227,7 @@ export default function GameController() {
       socket.emit(SocketEvents.ClientUserMove, data);
       setGame((prevState) => ({
         ...prevState,
+        isDisableField: true,
         steps: [
           ...prevState.steps,
           {
@@ -238,12 +268,14 @@ export default function GameController() {
 
           return {
             ...prevState,
+            isDisableField: false,
             steps: updatedSteps,
           };
         });
       } else {
         setGame((prevState) => ({
           ...prevState,
+          isDisableField: false,
           opponent: {
             ...prevState.opponent,
             steps: [
@@ -264,12 +296,14 @@ export default function GameController() {
         ...prevState,
         status: GameStatusEnum.OpponentTurn,
         moveDeadline: data.moveDeadline,
+        isDisableField: false,
       }));
     } else {
       setGame((prevState) => ({
         ...prevState,
         status: GameStatusEnum.UserTurn,
         moveDeadline: data.moveDeadline,
+        isDisableField: false,
       }));
     }
   };
@@ -357,6 +391,7 @@ export default function GameController() {
         telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
       });
       setGame({
+        isDisableField: false,
         moveDeadline: 0,
         gameId: 1,
         myRabbits: [],
@@ -376,6 +411,7 @@ export default function GameController() {
     if (TgButtons) {
       TgButtons.showBackButton(() => {
         setGame({
+          isDisableField: false,
           moveDeadline: 0,
           gameId: 1,
           myRabbits: [],

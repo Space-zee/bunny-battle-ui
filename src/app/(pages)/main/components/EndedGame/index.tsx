@@ -7,9 +7,10 @@ import { formatBalance } from "@/app/shared/utils";
 
 type EndedGameProps = {
   endedGame: IGetUserEndedGameRes;
+  onLinkClick: () => void;
 };
 
-export const EndedGame = ({ endedGame }: EndedGameProps) => {
+export const EndedGame = ({ endedGame, onLinkClick }: EndedGameProps) => {
   const prizePool = Number(endedGame.bet) * 2 * 0.99;
   return (
     <Flex className={clsx(s.root)} direction="column" align="start">
@@ -24,7 +25,9 @@ export const EndedGame = ({ endedGame }: EndedGameProps) => {
       </Box>
       <Flex justify="between" className={clsx(s.userWrapper, s.winner)}>
         <Text>🏆 @{endedGame.winner.username}</Text>
-        <Text className={s.winnerEth}>+{prizePool} ETH</Text>
+        <Text onClick={onLinkClick} className={s.winnerEth}>
+          +{prizePool} ETH
+        </Text>
       </Flex>
     </Flex>
   );

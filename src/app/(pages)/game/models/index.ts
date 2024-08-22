@@ -95,10 +95,9 @@ export const $doLoadGameData = atom(
           isCreator,
           isScCreated,
           steps: userSteps,
-          status:
-            !isUserTurn && moveDeadline < Number(Date.now())
-              ? GameStatusEnum.UserTurn
-              : GameStatusEnum.OpponentTurn,
+          status: isUserTurn
+            ? GameStatusEnum.UserTurn
+            : GameStatusEnum.OpponentTurn,
           myRabbits: userRabbits,
           bet,
           moveDeadline,

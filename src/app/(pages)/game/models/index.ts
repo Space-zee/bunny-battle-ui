@@ -27,6 +27,7 @@ export interface IGame {
     isInRoom: boolean;
     steps: ICoordinatesWithHit[];
     userName?: string;
+    photo?: string;
   };
 }
 
@@ -41,6 +42,8 @@ export const $game = atom<IGame>({
   opponent: {
     isInRoom: false,
     steps: [],
+    userName: "",
+    photo: "",
   },
 });
 
@@ -54,6 +57,7 @@ interface ILoadGameData {
   moveDeadline: number;
   opponentName: string;
   opponentSteps: ICoordinatesWithHit[];
+  opponentPhoto: string;
 }
 
 export const $doLoadGameData = atom(
@@ -83,6 +87,7 @@ export const $doLoadGameData = atom(
           opponentSteps,
           opponentName,
           isScCreated,
+          opponentPhoto,
         } = response.data;
         set($game, {
           isDisableField: false,
@@ -101,6 +106,7 @@ export const $doLoadGameData = atom(
             isInRoom: true,
             steps: opponentSteps,
             userName: opponentName,
+            photo: opponentPhoto,
           },
         });
       } else {

@@ -29,6 +29,17 @@ export const $notification = atom<{
   isOpen: false,
 });
 
+export const $secondNotification = atom<{
+  text: string;
+  image?: string;
+  isOpen: boolean;
+  type?: "joined" | "leaved";
+  bottom?: string;
+}>({
+  text: "A",
+  isOpen: false,
+});
+
 export const $userData = atom<IUserData | null>(null);
 export const $estimatedGameGasCost = atom<GameGasCost | null>(null);
 

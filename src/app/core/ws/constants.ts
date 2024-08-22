@@ -14,4 +14,5 @@ export enum SocketEvents {
   LeaveRoomClient = "leaveRoomClient",
   LeaveRoomServer = "leaveRoomServer",
   TxFailed = "txFailed",
+  AuthError = "authError",
 }

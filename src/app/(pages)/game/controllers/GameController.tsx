@@ -38,6 +38,7 @@ export default function GameController() {
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [TgStorage] = useAtom(coreModels.$tgStorage);
   const [, setNotification] = useAtom(coreModels.$notification);
+  const [, setSecondNotification] = useAtom(coreModels.$secondNotification);
   const [game, setGame] = useAtom(gameModels.$game);
   const $doLoadGameData = useSetAtom(gameModels.$doLoadGameData);
   const prizePool = Number(game?.bet) * 2 * 0.99;
@@ -60,6 +61,12 @@ export default function GameController() {
               ? undefined
               : data.joinerName
             : data.creatorName,
+        photo:
+          data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
+            ? data.isGameCreated
+              ? undefined
+              : data.joinerPhoto
+            : data.creatorPhoto,
         isInRoom: true,
       },
       isScCreated: data.isGameCreated,
@@ -91,15 +98,21 @@ export default function GameController() {
   const onLeaveRoom = () => {
     setGame((prevState) => {
       if (prevState.status === GameStatusEnum.RabbitsSet) {
-        setNotification({
+        setSecondNotification({
           isOpen: true,
-          title: `${prevState.opponent.userName} leaved the room`,
-          titleIcon: NotificationTitleIcon.Warning,
+          text: `@${prevState.opponent.userName}`,
+          image: prevState.opponent.photo,
+          type: "leaved",
         });
       }
       return {
         ...prevState,
-        opponent: { userName: undefined, steps: [], isInRoom: false },
+        opponent: {
+          userName: undefined,
+          steps: [],
+          isInRoom: false,
+          photo: undefined,
+        },
       };
     });
   };
@@ -109,10 +122,18 @@ export default function GameController() {
       data.telegramUserId !== (WebApp?.initDataUnsafe.user?.id as number) &&
       !data.isGameCreated
     ) {
-      setNotification({
+      setSecondNotification({
         isOpen: true,
-        title: `${data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number) ? data.joinerName : data.creatorName} joined the room`,
-        titleIcon: NotificationTitleIcon.UserJoin,
+        text: `@${
+          (data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
+            ? data.joinerName
+            : data.creatorName) as string
+        }`,
+        image:
+          data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
+            ? data.joinerPhoto
+            : data.creatorPhoto,
+        type: "joined",
       });
     }
 
@@ -133,6 +154,10 @@ export default function GameController() {
             data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
               ? data.joinerName
               : data.creatorName,
+          photo:
+            data.roomCreatorId === (WebApp?.initDataUnsafe.user?.id as number)
+              ? data.joinerPhoto
+              : data.creatorPhoto,
           isInRoom: false,
         },
         steps: [],
@@ -349,14 +374,24 @@ export default function GameController() {
     });
   };
 
-  const onTxFailed = () => {
+  const onTxFailed = (data: { error: string }) => {
+    setGame((prevState) => ({ ...prevState, isDisableField: false }));
     setNotification({
       isOpen: true,
-      title: `Your transaction failed, please try again.`,
+      title: data.error,
       titleIcon: NotificationTitleIcon.Error,
     });
     TgButtons?.mainButton.hideProgress();
     TgButtons?.mainButton.enable();
+  };
+
+  const onAuthError = () => {
+    setNotification({
+      isOpen: true,
+      title: "Authentication error",
+      description: { text: "Please reopen web app" },
+      titleIcon: NotificationTitleIcon.Error,
+    });
   };
 
   useEffect(() => {
@@ -372,6 +407,7 @@ export default function GameController() {
       `${SocketEvents.TxFailed}:${roomId}:${WebApp?.initDataUnsafe.user?.id as number}`,
       onTxFailed,
     );
+    socket.on(SocketEvents.AuthError, onAuthError);
 
     return () => {
       socket.off(`${SocketEvents.JoinRoomServer}:${roomId}`, onJoinRoomRes);
@@ -385,6 +421,7 @@ export default function GameController() {
         `${SocketEvents.TxFailed}:${roomId}:${WebApp?.initDataUnsafe.user?.id as number}`,
         onTxFailed,
       );
+      socket.off(SocketEvents.AuthError, onAuthError);
 
       socket.emit(SocketEvents.LeaveRoomClient, {
         roomId,

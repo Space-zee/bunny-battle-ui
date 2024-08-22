@@ -18,6 +18,8 @@ import {
   getBalanceDeficitForFee,
   isEnoughBalanceForFee,
 } from "@/app/(pages)/utils";
+import copy from "copy-text-to-clipboard";
+import { BotElement } from "../../main/components/BottomNav/molecule/BotElement";
 
 export default function CreateController() {
   const router = useRouter();
@@ -116,6 +118,15 @@ export default function CreateController() {
     }
   }, [error, bet]);
 
+  const onCopyWallet = (address: string) => {
+    copy(address);
+    setNotification({
+      isOpen: true,
+      titleIcon: NotificationTitleIcon.Copy,
+      title: "Address copied",
+    });
+  };
+
   return (
     <main className={s.main}>
       <Text className={s.header}>
@@ -149,6 +160,15 @@ export default function CreateController() {
           If you win the battle, you will receive a reward equal to 99% of your
           bet, where 1% is a fee
         </Text>
+      </Box>
+      <Box className={s.bottomNavBar}>
+        {userData && (
+          <BotElement
+            onCopyWallet={onCopyWallet}
+            userData={userData}
+            fullRounded={true}
+          />
+        )}
       </Box>
     </main>
   );

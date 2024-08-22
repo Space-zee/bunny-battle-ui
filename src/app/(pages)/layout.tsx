@@ -5,7 +5,7 @@ import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import React from "react";
 
-import { Notification } from "../components";
+import { Notification, NotificationSecond } from "../components";
 import { useAtom } from "jotai";
 import * as coreModels from "../core/models";
 
@@ -15,9 +15,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [notification, setNotification] = useAtom(coreModels.$notification);
+  const [secondNotification, setSecondNotification] = useAtom(
+    coreModels.$secondNotification,
+  );
   const [WebApp] = useAtom(coreModels.$webApp);
   const onNotification = (value: boolean) => {
     setNotification({ ...notification, isOpen: value });
+  };
+
+  const onSecondNotification = (value: boolean) => {
+    setSecondNotification({ ...secondNotification, isOpen: value });
   };
 
   return (
@@ -37,6 +44,15 @@ export default function RootLayout({
           isOpen={notification.isOpen}
           onOpen={onNotification}
           onClickOutside={() => onNotification(false)}
+        />
+        <NotificationSecond
+          isOpen={secondNotification.isOpen}
+          image={secondNotification.image}
+          onOpen={onSecondNotification}
+          onClickOutside={() => onSecondNotification(false)}
+          text={secondNotification.text}
+          type={secondNotification.type}
+          bottom={secondNotification.bottom}
         />
         <Theme appearance="dark">{children}</Theme>
       </body>

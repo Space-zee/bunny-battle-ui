@@ -33,6 +33,7 @@ export default function MainController() {
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
 
   const [, setNotification] = useAtom(coreModels.$notification);
+  const [, setSecondNotification] = useAtom(coreModels.$secondNotification);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadUserData = useSetAtom(coreModels.$doLoadUserData);
@@ -102,10 +103,10 @@ export default function MainController() {
 
   const onCopyWallet = (address: string) => {
     copy(address);
-    setNotification({
+    setSecondNotification({
       isOpen: true,
-      titleIcon: NotificationTitleIcon.Copy,
-      title: "Address copied",
+      text: "✅ Adress coppied",
+      bottom: "130",
     });
   };
 

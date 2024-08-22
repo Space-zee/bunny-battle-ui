@@ -14,7 +14,9 @@ export interface IJoinRoomRes {
   bet: string;
   roomId: string;
   creatorName: string;
+  creatorPhoto: string;
   joinerName?: string;
+  joinerPhoto: string;
   roomCreatorId: number;
 }
 
@@ -24,7 +26,9 @@ export interface IReadyForBattle {
   bet: string;
   roomId: string;
   creatorName: string;
+  creatorPhoto: string;
   joinerName: string;
+  joinerPhoto: string;
   roomCreatorId: number;
 }
 

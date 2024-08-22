@@ -28,15 +28,15 @@ type NotificationProps = {
 };
 
 export const Notification = ({
-  isOpen,
-  onOpen,
-  title,
-  description,
-  titleIcon,
-  onClickOutside,
-  bottom,
-  WebApp,
-}: NotificationProps) => {
+                               isOpen,
+                               onOpen,
+                               title,
+                               description,
+                               titleIcon,
+                               onClickOutside,
+                               bottom,
+                               WebApp,
+                             }: NotificationProps) => {
   const ref: MutableRefObject<HTMLLIElement | null> = useRef(null);
 
   useEffect(() => {
@@ -106,7 +106,11 @@ export const Notification = ({
                   {description.text}
                 </Text>
               ) : (
-                description.text
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: description.text || "",
+                  }}
+                />
               )}
             </Text>
           </Toast.Description>

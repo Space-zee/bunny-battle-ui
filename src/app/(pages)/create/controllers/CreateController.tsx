@@ -12,6 +12,7 @@ import { Input } from "@/app/components";
 import { PRESETS } from "@/app/(pages)/create/constants";
 import { Bet } from "@/app/(pages)/create/components";
 import Image from "next/image";
+import { NotificationTitleIcon } from "@/app/shared/enums";
 
 export default function CreateController() {
   const router = useRouter();
@@ -21,6 +22,9 @@ export default function CreateController() {
 
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [userData] = useAtom(coreModels.$userData);
+  const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
+
+  const [, setNotification] = useAtom(coreModels.$notification);
 
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
@@ -45,6 +49,18 @@ export default function CreateController() {
         setBet(value);
         setError("Not enough balance");
       } else {
+        console.log(estimatedGameGasCost);
+        if (
+          Number(estimatedGameGasCost?.estimatedGameGasCost) + Number(value) >
+          Number(userData?.balance)
+        ) {
+          setNotification({
+            isOpen: true,
+            titleIcon: NotificationTitleIcon.Warning,
+            title:
+              "Insufficient funds for transaction fees. Add funds or lower the bet amount",
+          });
+        }
         setBet(value);
         setError("");
       }

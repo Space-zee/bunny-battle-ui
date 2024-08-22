@@ -30,6 +30,7 @@ export const $notification = atom<{
 });
 
 export const $userData = atom<IUserData | null>(null);
+export const $estimatedGameGasCost = atom<GameGasCost | null>(null);
 
 export const $doLoadWebApp = atom(null, async (get, set) => {
   const webApp = get($webApp);
@@ -72,7 +73,7 @@ export const $doLoadEstimatedGameGasCost = atom(null, async (get, set) => {
       initData,
     );
     if (response.data) {
-      console.log(response.data);
+      set($estimatedGameGasCost, response.data);
     } else {
       set($notification, {
         titleIcon: NotificationTitleIcon.Error,

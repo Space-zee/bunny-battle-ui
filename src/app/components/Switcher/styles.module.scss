@@ -18,7 +18,9 @@
   cursor: pointer;
   background: none;
   color: $gray-400;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   border: none;
   padding: 4px 8px;
 

@@ -8,7 +8,7 @@
   width: 100%;
 
   &.disabled {
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 
@@ -28,7 +28,7 @@
 }
 
 .profileWrapperBorder {
-  background: linear-gradient(180deg, #1F2A37 0%, rgba(31, 42, 55, 0) 100%);
+  background: linear-gradient(180deg, #1f2a37 0%, rgba(31, 42, 55, 0) 100%);
   border-radius: 16px;
   width: 100%;
   padding: 1px;
@@ -41,7 +41,7 @@
   border-radius: 16px;
   padding: 8px;
 }
-.balanceWrapper{
+.balanceWrapper {
   display: flex;
   flex-direction: column;
   align-items: end;
@@ -95,11 +95,10 @@
   }
 }
 
-
 //CustomBox
 
 .customBoxWrapperBorder {
-  background: linear-gradient(180deg, #1F2A37 0%, rgba(31, 42, 55, 0) 100%);
+  background: linear-gradient(180deg, #1f2a37 0%, rgba(31, 42, 55, 0) 100%);
   padding: 1px;
   border-radius: 16px;
   height: 82px;

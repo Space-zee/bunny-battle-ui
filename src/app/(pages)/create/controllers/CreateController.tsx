@@ -14,6 +14,10 @@ import { Bet } from "@/app/(pages)/create/components";
 import Image from "next/image";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 import { formatBalance } from "@/app/shared/utils";
+import {
+  getBalanceDeficitForFee,
+  isEnoughBalanceForFee,
+} from "@/app/(pages)/utils";
 
 export default function CreateController() {
   const router = useRouter();
@@ -44,14 +48,10 @@ export default function CreateController() {
     }
   };
 
-  const isValidNumber = (value: string) => /^-?\d*\.?\d*$/.test(value) && Number(value) >= 0;
-  const isEnoughBalance = (value: string) => Number(value) <= Number(userData?.balance);
-  const isEnoughBalanceForFee = (value: string) => Number(estimatedGameGasCost?.estimatedGameGasCost) + Number(value) <=
-    Number(userData?.balance);
-
-  const getBalanceDeficitForFee = (value: string) =>
-    Number(estimatedGameGasCost?.estimatedGameGasCost) + Number(value) - Number(userData?.balance);
-
+  const isValidNumber = (value: string) =>
+    /^-?\d*\.?\d*$/.test(value) && Number(value) >= 0;
+  const isEnoughBalance = (value: string) =>
+    Number(value) <= Number(userData?.balance);
 
   const validateBet = (value: string) => {
     if (!isValidNumber(value)) {
@@ -63,13 +63,27 @@ export default function CreateController() {
       setError("Not enough balance");
       return;
     }
-    if (!isEnoughBalanceForFee(value)) {
+    if (
+      !isEnoughBalanceForFee(
+        value,
+        estimatedGameGasCost?.estimatedGameGasCost || "0",
+        userData?.balance || "0",
+      )
+    ) {
+      const deficit = formatBalance(
+        getBalanceDeficitForFee(
+          value,
+          estimatedGameGasCost?.estimatedGameGasCost || "0",
+          userData?.balance || "0",
+        ),
+      );
       setNotification({
         isOpen: true,
         titleIcon: NotificationTitleIcon.Warning,
-        title:
-          "Insufficient Funds",
-        description: { text: "Please deposit at least <strong>" + formatBalance(getBalanceDeficitForFee(value)) + " ETH </strong> to cover transaction fees and proceed with this bet, or lower the bet amount" },
+        title: "Insufficient Funds",
+        description: {
+          text: `Please deposit at least <strong>${deficit} ETH</strong> to cover transaction fees and proceed with this bet, or lower the bet amount.`,
+        },
       });
     }
     setBet(value);

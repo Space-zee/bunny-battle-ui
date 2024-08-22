@@ -94,7 +94,8 @@
   color: $gray-400;
   overflow-wrap: break-word;
 
-  strong, b {
+  strong,
+  b {
     font-weight: 700;
     color: $primary-white;
   }

@@ -28,15 +28,15 @@ type NotificationProps = {
 };
 
 export const Notification = ({
-                               isOpen,
-                               onOpen,
-                               title,
-                               description,
-                               titleIcon,
-                               onClickOutside,
-                               bottom,
-                               WebApp,
-                             }: NotificationProps) => {
+  isOpen,
+  onOpen,
+  title,
+  description,
+  titleIcon,
+  onClickOutside,
+  bottom,
+  WebApp,
+}: NotificationProps) => {
   const ref: MutableRefObject<HTMLLIElement | null> = useRef(null);
 
   useEffect(() => {

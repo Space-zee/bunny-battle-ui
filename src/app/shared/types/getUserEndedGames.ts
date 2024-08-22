@@ -7,4 +7,5 @@ export interface IGetUserEndedGameRes {
   loser: {
     username: string;
   };
+  lastTxHash: string;
 }

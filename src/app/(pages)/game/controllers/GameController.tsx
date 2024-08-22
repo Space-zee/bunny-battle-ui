@@ -75,20 +75,21 @@ export default function GameController() {
   };
 
   const onCreateBattle = () => {
-    const res: IRabbitsSetReq = {
-      roomId,
-      telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
-      rabbits: game.myRabbits,
-    };
-    setGame((prevState) => ({ ...prevState, isDisableField: true }));
-    socket.emit(SocketEvents.ClientRabbitsSet, res);
-    TgStorage?.saveInfo(
-      WebApp?.initDataUnsafe.user?.id as number,
-      storageKeys.rabbits(game.gameId.toString()),
-      game.myRabbits,
-    );
-    TgButtons?.mainButton.showProgress();
-    TgButtons?.mainButton.disable();
+    if (!TgButtons?.mainButton.isProgressVisible) {
+      const res: IRabbitsSetReq = {
+        roomId,
+        telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
+        rabbits: game.myRabbits,
+      };
+      setGame((prevState) => ({ ...prevState, isDisableField: true }));
+      socket.emit(SocketEvents.ClientRabbitsSet, res);
+      TgStorage?.saveInfo(
+        WebApp?.initDataUnsafe.user?.id as number,
+        storageKeys.rabbits(game.gameId.toString()),
+        game.myRabbits,
+      );
+      TgButtons?.mainButton.showProgress();
+    }
   };
 
   const joinRoom = (data: IJoinRoomReq) => {
@@ -104,14 +105,21 @@ export default function GameController() {
           image: prevState.opponent.photo,
           type: "leaved",
         });
+        return {
+          ...prevState,
+          opponent: {
+            userName: undefined,
+            steps: [],
+            isInRoom: false,
+            photo: undefined,
+          },
+        };
       }
       return {
         ...prevState,
         opponent: {
-          userName: undefined,
-          steps: [],
+          ...prevState.opponent,
           isInRoom: false,
-          photo: undefined,
         },
       };
     });
@@ -203,7 +211,6 @@ export default function GameController() {
       isDisableField: false,
     }));
     TgButtons?.mainButton.hideProgress();
-    TgButtons?.mainButton.enable();
   };
 
   const onGameStarted = async (data: {
@@ -230,7 +237,6 @@ export default function GameController() {
       isDisableField: false,
     }));
     TgButtons?.mainButton.hideProgress();
-    TgButtons?.mainButton.enable();
     TgButtons?.showMainButton(onMove, {
       color: colors.pink400,
       text_color: colors.black,
@@ -242,7 +248,6 @@ export default function GameController() {
   const onMove = () => {
     if (game.currentStep) {
       TgButtons?.mainButton.showProgress();
-      TgButtons?.mainButton.disable();
       const data: IUserMoveReq = {
         roomId,
         telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
@@ -268,7 +273,6 @@ export default function GameController() {
 
   const onConfirmWin = () => {
     TgButtons?.mainButton.showProgress();
-    TgButtons?.mainButton.disable();
     socket.emit(SocketEvents.ConfirmWin, {
       roomId,
       telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
@@ -277,7 +281,6 @@ export default function GameController() {
 
   const onServerUserMove = (data: IUserMoveRes) => {
     TgButtons?.mainButton.hideProgress();
-    TgButtons?.mainButton.enable();
     if (data.lastMove) {
       if (data.telegramUserId !== (WebApp?.initDataUnsafe.user?.id as number)) {
         setGame((prevState) => {
@@ -335,7 +338,6 @@ export default function GameController() {
 
   const onWinner = () => {
     TgButtons?.mainButton.hideProgress();
-    TgButtons?.mainButton.enable();
     TgStorage?.removeValue(
       WebApp?.initDataUnsafe.user?.id as number,
       storageKeys.rabbits(game.gameId.toString()),
@@ -344,18 +346,19 @@ export default function GameController() {
   };
 
   const onTimerComplete = () => {
-    if (game.status === GameStatusEnum.OpponentTurn) {
-      socket.emit(SocketEvents.CheckDeadlineClient, {
-        roomId,
-        telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
-      });
-    }
+    // if (game.status === GameStatusEnum.OpponentTurn) {
+    socket.emit(SocketEvents.CheckDeadlineClient, {
+      roomId,
+      telegramUserId: WebApp?.initDataUnsafe.user?.id as number,
+    });
+    //}
   };
 
   const onCheckDeadline = () => {
+    console.log("Check deadline");
     setGame((prevState) => {
       if (prevState.status === GameStatusEnum.OpponentTurn) {
-        TgButtons?.showMainButton(onMove, {
+        TgButtons?.showMainButton(onConfirmWin, {
           color: colors.pink400,
           text_color: colors.black,
           text: "Confirm Win",
@@ -367,6 +370,12 @@ export default function GameController() {
           status: GameStatusEnum.UserTurn,
         };
       }
+      TgButtons?.showMainButton(onMove, {
+        color: colors.pink400,
+        text_color: colors.black,
+        text: "Verify and shot with Sign",
+        is_active: false,
+      });
       return {
         ...prevState,
         status: GameStatusEnum.OpponentTurn,
@@ -382,7 +391,6 @@ export default function GameController() {
       titleIcon: NotificationTitleIcon.Error,
     });
     TgButtons?.mainButton.hideProgress();
-    TgButtons?.mainButton.enable();
   };
 
   const onAuthError = () => {
@@ -505,22 +513,31 @@ export default function GameController() {
           is_active: true,
         });
       } else {
-        TgButtons?.showMainButton(onConfirmWin, {
+        TgButtons?.showMainButton(onMove, {
           color: colors.pink400,
           text_color: colors.black,
-          text: "Confirm win",
-          is_active: true,
+          text: "Verify and shot with Sign",
+          is_active: false,
         });
       }
     } else if (game.status === GameStatusEnum.OpponentTurn) {
-      TgButtons?.showMainButton(onMove, {
-        color: colors.pink400,
-        text_color: colors.black,
-        text: "Verify and shot with Sign",
-        is_active: false,
-      });
+      if (game.moveDeadline > Number(Date.now())) {
+        TgButtons?.showMainButton(onMove, {
+          color: colors.pink400,
+          text_color: colors.black,
+          text: "Verify and shot with Sign",
+          is_active: false,
+        });
+      } else {
+        TgButtons?.showMainButton(onConfirmWin, {
+          color: colors.pink400,
+          text_color: colors.black,
+          text: "Confirm Win",
+          is_active: true,
+        });
+      }
     }
-  }, [game]);
+  }, [game, TgButtons]);
 
   return game.bet ? (
     <main className={s.main}>
@@ -575,9 +592,7 @@ export default function GameController() {
           </Text>
           <Countdown
             onComplete={() => {
-              if (game.moveDeadline > Number(Date.now())) {
-                onTimerComplete();
-              }
+              onTimerComplete();
             }}
             date={game.moveDeadline}
             renderer={(props) => (

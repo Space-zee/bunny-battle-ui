@@ -33,7 +33,9 @@ export default function MainController() {
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
 
   const [, setNotification] = useAtom(coreModels.$notification);
-  const [, setSecondNotification] = useAtom(coreModels.$secondNotification);
+  const [secondNotification, setSecondNotification] = useAtom(
+    coreModels.$secondNotification,
+  );
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadUserData = useSetAtom(coreModels.$doLoadUserData);
@@ -46,6 +48,7 @@ export default function MainController() {
   );
 
   const onCreateBattle = () => {
+    setSecondNotification({ ...secondNotification, isOpen: false });
     if (userData?.isActiveGames) {
       setNotification({
         isOpen: true,
@@ -64,6 +67,7 @@ export default function MainController() {
   const onDeleteGame = async (roomId: string) => {
     await $doDeleteGame({ roomId });
     $doLoadActiveGames();
+    $doLoadUserData();
   };
 
   useEffect(() => {

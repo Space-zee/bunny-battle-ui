@@ -1,5 +1,5 @@
 import s from "./style.module.scss";
-import { Flex, Text } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import { Switcher } from "@/app/components";
 import React, { useState } from "react";
@@ -14,9 +14,10 @@ import {
   isEnoughBalanceForFee,
 } from "@/app/(pages)/utils";
 import { formatBalance } from "@/app/shared/utils";
-import { NotificationTitleIcon } from "@/app/shared/enums";
+import { ChainIdEnum, NotificationTitleIcon } from "@/app/shared/enums";
 import { useAtom } from "jotai/index";
 import * as coreModels from "@/app/core/models";
+import { networks } from "@/app/shared/configs/networks";
 
 type LobbySceneProps = {
   onReload: () => void;
@@ -41,6 +42,11 @@ export const LobbyScene = ({
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
 
   const [, setNotification] = useAtom(coreModels.$notification);
+  const onEndedGameLinkClick = (hash: string) => {
+    WebApp.openLink(
+      `${networks[process.env.CHAIN_ID as unknown as ChainIdEnum].explorer}tx/${hash}`,
+    );
+  };
 
   return (
     <Flex className={s.root} direction="column" align="center" justify="center">
@@ -63,8 +69,9 @@ export const LobbyScene = ({
         onSetActiveTab={setGamesTab}
       />
       <Flex className={s.gamesWrapper} direction="column" gap="3">
-        {gamesTab === "active"
-          ? activeGames.map((el, index) => (
+        {gamesTab === "active" ? (
+          activeGames.length ? (
+            activeGames.map((el, index) => (
               <Game
                 key={index}
                 webApp={WebApp}
@@ -99,9 +106,35 @@ export const LobbyScene = ({
                 }}
               />
             ))
-          : userEndedGames.map((el, index) => (
-              <EndedGame key={index} endedGame={el} />
-            ))}
+          ) : (
+            <Box className={s.boxBorder}>
+              <Flex
+                className={s.box}
+                direction="column"
+                align="center"
+                justify="center"
+              >
+                <Image
+                  src={"/bunny.svg"}
+                  alt={"bunny"}
+                  width={72}
+                  height={72}
+                />
+                <Text className={s.noActiveBattles}>
+                  No active battles for now
+                </Text>
+              </Flex>
+            </Box>
+          )
+        ) : (
+          userEndedGames.map((el, index) => (
+            <EndedGame
+              key={index}
+              endedGame={el}
+              onLinkClick={() => onEndedGameLinkClick(el.lastTxHash)}
+            />
+          ))
+        )}
       </Flex>
     </Flex>
   );

@@ -23,4 +23,7 @@ export const apiPaths = {
   getGameResult(roomId: string): string {
     return `/getGameResult/${roomId}`;
   },
+  getEstimatedGasCost(): string {
+    return "/getEstimatedGasCost";
+  },
 };

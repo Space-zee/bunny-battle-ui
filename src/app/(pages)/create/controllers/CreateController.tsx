@@ -12,6 +12,12 @@ import { Input } from "@/app/components";
 import { PRESETS } from "@/app/(pages)/create/constants";
 import { Bet } from "@/app/(pages)/create/components";
 import Image from "next/image";
+import { NotificationTitleIcon } from "@/app/shared/enums";
+import { formatBalance } from "@/app/shared/utils";
+import {
+  getBalanceDeficitForFee,
+  isEnoughBalanceForFee,
+} from "@/app/(pages)/utils";
 
 export default function CreateController() {
   const router = useRouter();
@@ -21,6 +27,9 @@ export default function CreateController() {
 
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [userData] = useAtom(coreModels.$userData);
+  const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
+
+  const [, setNotification] = useAtom(coreModels.$notification);
 
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
@@ -39,18 +48,46 @@ export default function CreateController() {
     }
   };
 
+  const isValidNumber = (value: string) =>
+    /^-?\d*\.?\d*$/.test(value) && Number(value) >= 0;
+  const isEnoughBalance = (value: string) =>
+    Number(value) <= Number(userData?.balance);
+
   const validateBet = (value: string) => {
-    if (/^-?\d*\.?\d*$/.test(value)) {
-      if (Number(value) > Number(userData?.balance) && Number(value) < 0) {
-        setBet(value);
-        setError("Not enough balance");
-      } else {
-        setBet(value);
-        setError("");
-      }
-    } else {
+    if (!isValidNumber(value)) {
       setError("Invalid number");
+      return;
     }
+    if (!isEnoughBalance(value)) {
+      setBet(value);
+      setError("Not enough balance");
+      return;
+    }
+    if (
+      !isEnoughBalanceForFee(
+        value,
+        estimatedGameGasCost?.estimatedGameGasCost || "0",
+        userData?.balance || "0",
+      )
+    ) {
+      const deficit = formatBalance(
+        getBalanceDeficitForFee(
+          value,
+          estimatedGameGasCost?.estimatedGameGasCost || "0",
+          userData?.balance || "0",
+        ),
+      );
+      setNotification({
+        isOpen: true,
+        titleIcon: NotificationTitleIcon.Warning,
+        title: "Insufficient Funds",
+        description: {
+          text: `Please deposit at least <strong>${deficit} ETH</strong> to cover transaction fees and proceed with this bet, or lower the bet amount.`,
+        },
+      });
+    }
+    setBet(value);
+    setError("");
   };
 
   useEffect(() => {

@@ -16,4 +16,8 @@
   border-right-color: $pink-400;
   animation: l2 1s infinite linear;
 }
-@keyframes l2 {to{transform: rotate(1turn)}}
+@keyframes l2 {
+  to {
+    transform: rotate(1turn);
+  }
+}

@@ -106,7 +106,11 @@ export const Notification = ({
                   {description.text}
                 </Text>
               ) : (
-                description.text
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: description.text || "",
+                  }}
+                />
               )}
             </Text>
           </Toast.Description>

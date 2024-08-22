@@ -7,6 +7,7 @@ import { IUserData } from "@/app/shared/types";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import { TgStorage } from "@/app/shared/utils";
 import { NotificationTitleIcon } from "@/app/shared/enums";
+import { GameGasCost } from "@/app/shared/types/gameGasCost.interface";
 
 export const $webApp = atom<WebAppTypes | null>(null);
 export const $tgButtons = atom<TgButtons | null>(null);
@@ -29,6 +30,7 @@ export const $notification = atom<{
 });
 
 export const $userData = atom<IUserData | null>(null);
+export const $estimatedGameGasCost = atom<GameGasCost | null>(null);
 
 export const $doLoadWebApp = atom(null, async (get, set) => {
   const webApp = get($webApp);
@@ -52,6 +54,26 @@ export const $doLoadUserData = atom(null, async (get, set) => {
     );
     if (response.data) {
       set($userData, response.data);
+    } else {
+      set($notification, {
+        titleIcon: NotificationTitleIcon.Error,
+        isOpen: true,
+        title: "An error occurred",
+        description: { text: response.error },
+      });
+    }
+  }
+});
+
+export const $doLoadEstimatedGameGasCost = atom(null, async (get, set) => {
+  const initData = get($webApp)?.initData;
+  if (initData) {
+    const response = await httpClient.get<GameGasCost>(
+      apiPaths.getEstimatedGasCost(),
+      initData,
+    );
+    if (response.data) {
+      set($estimatedGameGasCost, response.data);
     } else {
       set($notification, {
         titleIcon: NotificationTitleIcon.Error,

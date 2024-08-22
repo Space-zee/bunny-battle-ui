@@ -30,6 +30,8 @@ export default function MainController() {
   const [userData] = useAtom(coreModels.$userData);
   const [activeGames] = useAtom(gamesModels.$activeGames);
   const [userEndedGames] = useAtom(gamesModels.$userEndedGames);
+  const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
+
   const [, setNotification] = useAtom(coreModels.$notification);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
@@ -38,6 +40,9 @@ export default function MainController() {
   const $doLoadUserEndedGames = useSetAtom(gamesModels.$doLoadUserEndedGames);
   const $doDeleteGame = useSetAtom(gamesModels.$doDeleteGame);
   const $doWithdraw = useSetAtom(gamesModels.$doWithdraw);
+  const $doLoadEstimatedGameGasCost = useSetAtom(
+    coreModels.$doLoadEstimatedGameGasCost,
+  );
 
   const onCreateBattle = () => {
     if (userData?.isActiveGames) {
@@ -78,11 +83,13 @@ export default function MainController() {
     $doLoadUserData();
     $doLoadActiveGames();
     $doLoadUserEndedGames();
+    $doLoadEstimatedGameGasCost();
   }, []);
 
   const onReloadLobby = async () => {
     await $doLoadActiveGames();
     await $doLoadUserData();
+    await $doLoadEstimatedGameGasCost();
   };
 
   const onReloadProfile = async () => {
@@ -102,7 +109,11 @@ export default function MainController() {
     });
   };
 
-  return !WebApp || !TgButtons || !userData || !activeGames ? (
+  return !WebApp ||
+    !TgButtons ||
+    !userData ||
+    !activeGames ||
+    !estimatedGameGasCost ? (
     <Loader />
   ) : (
     <main className={s.main}>

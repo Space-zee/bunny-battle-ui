@@ -19,7 +19,7 @@ export const $notification = atom<{
     link?: string;
     color?: string;
   };
-  bottom?: number;
+  bottom?: string;
   titleIcon: NotificationTitleIcon;
   isOpen: boolean;
 }>({

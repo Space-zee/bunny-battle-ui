@@ -32,6 +32,7 @@ export default function CreateController() {
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
 
   const [, setNotification] = useAtom(coreModels.$notification);
+  const [, setSecondNotification] = useAtom(coreModels.$secondNotification);
 
   const $doCreateGame = useSetAtom(createModels.$doCreateGame);
 
@@ -81,6 +82,7 @@ export default function CreateController() {
       );
       setNotification({
         isOpen: true,
+        bottom: "56",
         titleIcon: NotificationTitleIcon.Warning,
         title: "Insufficient Funds",
         description: {
@@ -120,17 +122,17 @@ export default function CreateController() {
 
   const onCopyWallet = (address: string) => {
     copy(address);
-    setNotification({
+    setSecondNotification({
       isOpen: true,
-      titleIcon: NotificationTitleIcon.Copy,
-      title: "Address copied",
+      text: "✅ Adress coppied",
+      bottom: "56",
     });
   };
 
   return (
     <main className={s.main}>
       <Text className={s.header}>
-        Create <span className={s.name}>BunnBattle</span>
+        Create <span className={s.name}>BunnyBattle</span>
       </Text>
       <Box className={s.wrapper}>
         <Text className={s.whiteHeader}>Set custom bet amount</Text>

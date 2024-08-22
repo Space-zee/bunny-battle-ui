@@ -23,7 +23,7 @@ type NotificationProps = {
     link?: string;
     color?: string;
   };
-  bottom?: number;
+  bottom?: string;
   WebApp: WebApp | null;
 };
 

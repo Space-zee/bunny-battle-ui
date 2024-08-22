@@ -4,4 +4,5 @@ export enum NotificationTitleIcon {
   Copy = "/copy.svg",
   Error = "/errorCircle.svg",
   UserJoin = "/userJoin.svg",
+  Lock = "Icon/24/lock.svg",
 }

@@ -49,8 +49,11 @@ export default function MainController() {
     if (userData?.isActiveGames) {
       setNotification({
         isOpen: true,
-        titleIcon: NotificationTitleIcon.Warning,
-        title: "You already have active games",
+        titleIcon: NotificationTitleIcon.Lock,
+        title: "You already have an active game",
+        description: {
+          text: "You can only have one active game at a time. Please end or delete your existing game to start a new one.",
+        },
       });
     } else {
       router.push(`/create`);
@@ -106,7 +109,7 @@ export default function MainController() {
     setSecondNotification({
       isOpen: true,
       text: "✅ Adress coppied",
-      bottom: "130",
+      bottom: "128",
     });
   };
 

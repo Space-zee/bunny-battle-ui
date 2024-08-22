@@ -33,7 +33,7 @@ export const $secondNotification = atom<{
   text: string;
   image?: string;
   isOpen: boolean;
-  type?: "joined" | "leaved";
+  type?: "joined" | "left";
   bottom?: string;
 }>({
   text: "A",

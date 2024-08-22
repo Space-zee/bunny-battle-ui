@@ -14,7 +14,7 @@ type NotificationProps = {
   onClickOutside: () => void;
   text: string;
   image?: string;
-  type?: "joined" | "leaved";
+  type?: "joined" | "left";
   bottom?: string;
 };
 
@@ -59,7 +59,15 @@ export const NotificationSecond = ({
             )}
             <Text className={clsx(s.notificationTitleText)}>
               <span className={s.text}>{text}</span>{" "}
-              <span className={s.type}>{type ? type : ""}</span>
+              <span
+                className={clsx(
+                  s.type,
+                  type === "joined" && s.joined,
+                  type === "left" && s.left,
+                )}
+              >
+                {type ? type : ""}
+              </span>
             </Text>
           </Flex>
         </Toast.Title>

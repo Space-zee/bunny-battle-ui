@@ -32,10 +32,9 @@
 }
 
 .toastRoot[data-state="open"] {
-  animation:
-    translateIn 0.4s cubic-bezier(0.33, 0, 0.67, 1) 0s 1 normal forwards,
-    opacityIn 0.24s cubic-bezier(0.5, 0, 0.15, 1) 0s 1 normal forwards,
-    scaleIn 0.4s cubic-bezier(0.33, 0, 0.67, 1) 0s 1 normal forwards;
+  animation: translateIn 0.4s cubic-bezier(0.33, 0, 0.67, 1) 0s 1 normal forwards,
+  opacityIn 0.24s cubic-bezier(0.5, 0, 0.15, 1) 0s 1 normal forwards,
+  scaleIn 0.4s cubic-bezier(0.33, 0, 0.67, 1) 0s 1 normal forwards;
 }
 
 .toastRoot[data-state="closed"] {
@@ -127,11 +126,21 @@
   padding-left: 6px;
   font-size: 12px;
 }
+
 .text {
   color: $primary-white;
 }
+
 .type {
   color: $gray-500;
+}
+
+.joined {
+  color: $green-400;
+}
+
+.left {
+  color: $error-400;
 }
 
 .description {

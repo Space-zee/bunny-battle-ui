@@ -103,7 +103,7 @@ export default function GameController() {
           isOpen: true,
           text: `@${prevState.opponent.userName}`,
           image: prevState.opponent.photo,
-          type: "leaved",
+          type: "left",
         });
         return {
           ...prevState,

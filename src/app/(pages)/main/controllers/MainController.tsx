@@ -77,6 +77,7 @@ export default function MainController() {
     $doLoadWebApp();
 
     if (WebApp) {
+      WebApp.expand();
       TgButtons?.showMainButton(onCreateBattle, {
         color: colors.pink400,
         text_color: colors.black,

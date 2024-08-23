@@ -43,7 +43,7 @@ export const NotificationSecond = ({
   console.log(bottom);
 
   return (
-    <Toast.Provider swipeDirection="down" duration={5000}>
+    <Toast.Provider swipeDirection="down" duration={2000}>
       <Toast.Viewport className={s.toastViewport} />
       <Toast.Root
         ref={ref}

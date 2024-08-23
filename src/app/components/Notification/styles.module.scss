@@ -36,13 +36,15 @@
     scaleIn 0.4s cubic-bezier(0.33, 0, 0.67, 1) 0s 1 normal forwards;
 }
 
+// .toastRoot[data-state="closed"] {
+//   animation: hide 100ms ease-in;
+// }
+
 .toastRoot[data-state="closed"] {
   animation:
-    translateOut 0.4s 0.3s cubic-bezier(0.5, 0.35, 0.15, 1) 1.5s 1 normal
-      forwards,
-    opacityOut 0.24s 0.3s cubic-bezier(0.5, 0.35, 0.15, 1) 1.5s 1 normal
-      forwards,
-    scaleOut 0.4s 0.3s cubic-bezier(0.5, 0.35, 0.15, 1) 1.5s 1 normal forwards;
+    bOut 0.3s cubic-bezier(0.5, 0.35, 0.15, 1) normal forwards,
+    opacityOut 0.25s cubic-bezier(0.5, 0.35, 0.15, 1) normal forwards,
+    scaleOut 0.3s cubic-bezier(0.5, 0.35, 0.15, 1) normal forwards;
 }
 
 .toastRoot[data-swipe="move"] {
@@ -100,7 +102,7 @@
   }
 }
 
-@keyframes translateOut {
+@keyframes bOut {
   0% {
     translate: 0px 0px;
   }

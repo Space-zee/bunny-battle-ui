@@ -127,20 +127,20 @@ export default function MainController() {
     <Loader />
   ) : (
     <main className={s.main}>
-      <Button
-        onClick={() => {
-          //Share for app and phone/ modal for web
-          WebApp?.openLink(
-            "https://t.me/share/url?url=BunnyBattleBot/?startapp&text=Join battle with me",
-          );
-          // WebApp?.switchInlineQuery(
-          //   "\n\nhttps://t.me/BunnyBattleBot Join battle with me",
-          //   ["bots", "groups", "users", "channels"],
-          // );
-        }}
-      >
-        Send
-      </Button>
+      {/*<Button*/}
+      {/*  onClick={() => {*/}
+      {/*    //Share for app and phone/ modal for web*/}
+      {/*    WebApp?.openLink(*/}
+      {/*      "https://t.me/share/url?url=BunnyBattleBot/?startapp&text=Join battle with me",*/}
+      {/*    );*/}
+      {/*    // WebApp?.switchInlineQuery(*/}
+      {/*    //   "\n\nhttps://t.me/BunnyBattleBot Join battle with me",*/}
+      {/*    //   ["bots", "groups", "users", "channels"],*/}
+      {/*    // );*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  Send*/}
+      {/*</Button>*/}
       {activeNavTab === NavItemEnum.Lobby && (
         <LobbyScene
           onDeleteGame={onDeleteGame}

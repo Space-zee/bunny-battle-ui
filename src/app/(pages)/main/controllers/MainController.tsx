@@ -28,6 +28,7 @@ export default function MainController() {
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [userData] = useAtom(coreModels.$userData);
+  const [nativePrice] = useAtom(coreModels.$nativePrice);
   const [activeGames] = useAtom(gamesModels.$activeGames);
   const [userEndedGames] = useAtom(gamesModels.$userEndedGames);
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
@@ -128,6 +129,7 @@ export default function MainController() {
     <main className={s.main}>
       {activeNavTab === NavItemEnum.Lobby && (
         <LobbyScene
+          nativePrice={nativePrice}
           onDeleteGame={onDeleteGame}
           onEnterGame={onEnterGame}
           onReload={onReloadLobby}
@@ -139,6 +141,7 @@ export default function MainController() {
       {activeNavTab === NavItemEnum.Leaderboard && <LeaderboardScene />}
       {activeNavTab === NavItemEnum.Profile && (
         <WithdrawScene
+          nativePrice={nativePrice}
           onWithdraw={onWithdraw}
           onCreateBattle={onCreateBattle}
           TgButtons={TgButtons}

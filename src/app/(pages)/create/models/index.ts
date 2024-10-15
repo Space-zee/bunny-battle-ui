@@ -12,7 +12,7 @@ export const $doCreateGame = atom(
     const initData = get($webApp)?.initData;
     if (initData) {
       const response = await httpClient.post<ICreateGameReq, ICreateGameRes>(
-        apiPaths.createGame(),
+        apiPaths.game.default(),
         initData,
         { bet },
       );

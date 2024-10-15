@@ -6,11 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useAtom, useSetAtom } from "jotai";
 import * as coreModels from "@/app/core/models";
 import * as gameModels from "../models";
-import { GameStatusEnum, IGame } from "../models";
-import { Field } from "../components/Field";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
-import { UsernameBox } from "@/app/(pages)/game/components";
+import { Field, UsernameBox } from "@/app/(pages)/game/components";
 import { socket } from "@/app/core/ws/socket";
 import { SocketEvents } from "@/app/core/ws/constants";
 import {
@@ -25,10 +23,12 @@ import { colors, storageKeys } from "@/app/shared/constants";
 import Countdown from "react-countdown";
 import { Loader } from "@/app/components";
 import {
+  GameStatusEnum,
   NotificationTitleIcon,
   RoomStatusServerEnum,
 } from "@/app/shared/enums";
-import { ICoordinates } from "@/app/shared/types";
+import { ICoordinates, IGame } from "@/app/shared/types";
+import { formatValue } from "@/app/shared/utils";
 
 export default function GameController() {
   const router = useRouter();
@@ -37,13 +37,15 @@ export default function GameController() {
   const [WebApp] = useAtom(coreModels.$webApp);
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [TgStorage] = useAtom(coreModels.$tgStorage);
+  const [nativePrice] = useAtom(coreModels.$nativePrice);
   const [, setNotification] = useAtom(coreModels.$notification);
   const [, setSecondNotification] = useAtom(coreModels.$secondNotification);
   const [game, setGame] = useAtom(gameModels.$game);
-  const $doLoadGameData = useSetAtom(gameModels.$doLoadGameData);
-  const prizePool = Number(game?.bet) * 2 * 0.99;
 
+  const $doLoadGameData = useSetAtom(gameModels.$doLoadGameData);
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
+
+  const prizePool = Number(game?.bet) * 2 * 0.99;
 
   const onReadyForBattle = (data: IReadyForBattle) => {
     setGame((prevState) => ({
@@ -580,7 +582,12 @@ export default function GameController() {
           />
         </Flex>
         <Text className={s.prizeOf}>for prize of</Text>
-        <Text className={s.prize}>{prizePool.toFixed(5)} ETH</Text>
+        <Text className={s.prize}>
+          {prizePool.toFixed(5)} ETH{" "}
+          <span className={s.prizeUsd}>
+            ≈ ${formatValue(String(prizePool * nativePrice))}
+          </span>
+        </Text>
       </Flex>
 
       {game.status !== GameStatusEnum.RabbitsSet && (

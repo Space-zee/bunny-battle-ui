@@ -1,16 +1,16 @@
 "use client";
 import s from "./style.module.scss";
 import { Box, Flex } from "@radix-ui/themes";
-import { CellStatusEnum } from "@/app/shared/enums";
+import { CellStatusEnum, GameStatusEnum } from "@/app/shared/enums";
 import { QuestionMarkIcon } from "@/app/components";
 import clsx from "clsx";
 import { useMemo } from "react";
-import { GameStatusEnum, IGame } from "@/app/(pages)/game/models";
 import {
   compareCoordinates,
   gridIndexToCoordinates,
 } from "@/app/shared/utils/math";
 import { motion } from "framer-motion";
+import { IGame } from "@/app/shared/types";
 
 type CellProps = {
   index: number;

@@ -5,7 +5,12 @@ import React, { useEffect, useState } from "react";
 import { IUserData } from "@/app/shared/types";
 import { motion } from "framer-motion";
 import { Avatar } from "@/app/components";
-import { formatBalance, getUsernameStr, TgButtons } from "@/app/shared/utils";
+import {
+  formatBalance,
+  formatValue,
+  getUsernameStr,
+  TgButtons,
+} from "@/app/shared/utils";
 import { colors } from "@/app/shared/constants";
 import { WithdrawWindow } from "@/app/(pages)/main/components/WithdrawWindow";
 import clsx from "clsx";
@@ -13,6 +18,7 @@ import clsx from "clsx";
 type WithdrawSceneProps = {
   TgButtons: TgButtons;
   userData: IUserData;
+  nativePrice: number;
   onReload: () => void;
   onCreateBattle: () => void;
   onWithdraw: (amount: string, to: string) => Promise<boolean>;
@@ -24,6 +30,7 @@ export const WithdrawScene = ({
   TgButtons,
   onCreateBattle,
   onWithdraw,
+  nativePrice,
 }: WithdrawSceneProps) => {
   const [isShowWithdrawWindow, setShowWithdrawWindow] = useState(false);
 
@@ -83,9 +90,11 @@ export const WithdrawScene = ({
                 </Text>
               </Flex>
               <Box className={s.balanceWrapper}>
-                <Text className={s.totalBalanceHeader}>Total balance</Text>
                 <Text className={s.totalBalance}>
                   {formatBalance(Number(userData.balance))} ETH
+                </Text>
+                <Text className={s.totalBalanceUsd}>
+                  ${formatValue(String(Number(userData.balance) * nativePrice))}
                 </Text>
               </Box>
             </Flex>

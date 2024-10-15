@@ -16,3 +16,7 @@ export const formatBalance = (balance: number): string => {
   const formatted = balance.toFixed(4);
   return formatted.replace(/\.?0+$/, "");
 };
+
+export const formatValue = (value: string, fixed: number = 2): string => {
+  return Number(value).toFixed(fixed);
+};

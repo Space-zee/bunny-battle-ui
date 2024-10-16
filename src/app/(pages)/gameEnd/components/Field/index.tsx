@@ -1,11 +1,11 @@
 import { Grid, Box } from "@radix-ui/themes";
 import { Cell } from "./Cell";
-import { IGameResultStep } from "@/app/(pages)/gameEnd/types";
+import { IGameResultStepForField } from "@/app/(pages)/gameEnd/types";
 import s from "./style.module.scss";
 import clsx from "clsx";
 
 type FieldProps = {
-  steps: IGameResultStep[];
+  steps: IGameResultStepForField[];
   username: string;
   opponentBoard: boolean;
 };

@@ -13,6 +13,8 @@ import Image from "next/image";
 import { coordinatesToIndex, formatValue } from "@/app/shared/utils";
 import { networks } from "@/app/shared/configs/networks";
 import { ChainIdEnum } from "@/app/shared/enums";
+import { Field } from "@/app/(pages)/gameEnd/components";
+import { getStepsByUsers } from "@/app/(pages)/gameEnd/utils";
 
 export default function GameEndController() {
   const searchParams = useSearchParams();
@@ -28,6 +30,11 @@ export default function GameEndController() {
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadGameResult = useSetAtom(gameEndModels.$doLoadGameResult);
+
+  const stepsByUsers = getStepsByUsers(
+    gameResult.steps,
+    WebApp?.initDataUnsafe.user?.id as number,
+  );
 
   useEffect(() => {
     $doLoadWebApp();
@@ -58,19 +65,13 @@ export default function GameEndController() {
       {!gameResult.winner ? (
         <Loader />
       ) : (
-        <Flex>
+        <Flex className={s.wrapper}>
           {userData?.wallet.toLowerCase() ===
           gameResult.winner.toLowerCase() ? (
-            <Box>
-              <Flex
-                direction="column"
-                align={"center"}
-                className={s.headerWrapper}
-              >
+            <Box className={s.headerWrapper}>
+              <Flex direction="column" align={"center"} className={s.header}>
                 <Text className={s.resEmoji}>🎉</Text>
-                <Text className={s.resHeader}>
-                  Congratulations on your victory
-                </Text>
+                <Text className={s.resHeader}>Grats, You won!</Text>
               </Flex>
               <Box className={s.prizePoolWrapper}>
                 <Text className={s.youGot}>You got</Text>
@@ -84,6 +85,22 @@ export default function GameEndController() {
                     )}
                   </span>
                 </Text>
+                <Flex className={s.fieldsWrapper}>
+                  <Field
+                    steps={stepsByUsers.opponent}
+                    username={"Your"}
+                    opponentBoard={false}
+                  />
+                  <Field
+                    steps={stepsByUsers.user}
+                    username={
+                      stepsByUsers.opponent.length
+                        ? `@${stepsByUsers.opponent[0].username}`
+                        : "Opponent"
+                    }
+                    opponentBoard={true}
+                  />
+                </Flex>
               </Box>
               <Box className={s.gameIdHeader}>
                 <span className={s.gameId}>#{gameResult.gameId}</span>{" "}
@@ -91,18 +108,28 @@ export default function GameEndController() {
               </Box>
             </Box>
           ) : (
-            <Box>
-              <Flex
-                direction="column"
-                align={"center"}
-                className={s.headerWrapper}
-              >
+            <Box className={s.headerWrapper}>
+              <Flex direction="column" align={"center"} className={s.header}>
                 <Text className={s.resEmoji}>😔</Text>
-                <Text
-                  className={s.resHeader}
-                >{`Don't worry, you'll be lucky next time`}</Text>
+                <Text className={s.resHeader}>Ops, You lose</Text>
               </Flex>
               <Box className={s.prizePoolWrapper}></Box>
+              <Flex className={s.fieldsWrapper}>
+                <Field
+                  steps={stepsByUsers.opponent}
+                  username={"Your"}
+                  opponentBoard={false}
+                />
+                <Field
+                  steps={stepsByUsers.user}
+                  username={
+                    stepsByUsers.opponent.length
+                      ? `@${stepsByUsers.opponent[0].username}`
+                      : "Opponent"
+                  }
+                  opponentBoard={true}
+                />
+              </Flex>
               <Box className={s.gameIdHeader}>
                 <span className={s.gameId}>#{gameResult.gameId}</span>{" "}
                 BunnyBattle History
@@ -133,7 +160,7 @@ export default function GameEndController() {
                   ? "You"
                   : `@${el.username}`}{" "}
                 <span className={s.firedIn}>fired in</span>{" "}
-                {coordinatesToIndex({ x: el.x, y: el.y })} cell
+                {coordinatesToIndex({ x: el.x, y: el.y }) + 1} cell
               </Text>
             )}
           </Box>

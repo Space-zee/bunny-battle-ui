@@ -1,0 +1,23 @@
+@import "@/styles/variables";
+
+.root {
+  width: 100%;
+  background: $gray-900;
+  border-radius: 16px;
+  padding: 6px;
+}
+
+.userName {
+  font-size: 12px;
+  font-weight: 600;
+  color: $pink-400;
+  margin-bottom: 6px;
+
+  &.opponent {
+    color: $gray-500;
+  }
+}
+
+.field {
+  gap: 4px;
+}

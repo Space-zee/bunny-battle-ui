@@ -1,0 +1,23 @@
+@import "@/styles/variables";
+
+.root {
+  background: $gray-950;
+  height: 50px;
+  border-radius: 8px;
+  color: $gray-400;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.opponentDefault {
+  background: $gray-800;
+  border: 2px solid $gray-700;
+}
+
+.value {
+  align-self: center;
+  font-size: 12px;
+}

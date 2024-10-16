@@ -21,6 +21,7 @@ type CellProps = {
 const cellInnerConfig: Partial<Record<CellStatusEnum, string | JSX.Element>> = {
   [CellStatusEnum.Set]: "🐇",
   [CellStatusEnum.Killed]: "❌🐇",
+  [CellStatusEnum.Verify]: "⏳",
   [CellStatusEnum.OpponentDefault]: <QuestionMarkIcon width={12} height={22} />,
   [CellStatusEnum.OpponentShot]: <QuestionMarkIcon width={12} height={22} />,
   [CellStatusEnum.Missed]: "⭕",

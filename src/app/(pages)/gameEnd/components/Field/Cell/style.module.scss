@@ -12,6 +12,10 @@
   align-items: flex-end;
 }
 
+.verify {
+  border: 2px dashed $gray-700;
+}
+
 .opponentDefault {
   background: $gray-800;
   border: 2px solid $gray-700;

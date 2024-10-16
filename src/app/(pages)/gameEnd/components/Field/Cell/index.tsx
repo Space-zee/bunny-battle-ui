@@ -8,16 +8,17 @@ import {
   compareCoordinates,
   gridIndexToCoordinates,
 } from "@/app/shared/utils/math";
-import { IGameResultStep } from "@/app/(pages)/gameEnd/types";
+import { IGameResultStepForField } from "@/app/(pages)/gameEnd/types";
 
 type CellProps = {
   index: number;
-  steps: IGameResultStep[];
+  steps: IGameResultStepForField[];
   opponentBoard: boolean;
 };
 
 const cellInnerConfig: Partial<Record<CellStatusEnum, string | JSX.Element>> = {
   [CellStatusEnum.Killed]: "❌🐇",
+  [CellStatusEnum.Verify]: "⏳",
   [CellStatusEnum.OpponentDefault]: <QuestionMarkIcon width={12} height={16} />,
   [CellStatusEnum.Missed]: "⭕",
 };
@@ -27,6 +28,9 @@ export const Cell = ({ index, steps, opponentBoard }: CellProps) => {
     const cellCoordinates = gridIndexToCoordinates(index);
     const res = steps.find((item) => compareCoordinates(item, cellCoordinates));
     if (res) {
+      if (res.isLastMove) {
+        return CellStatusEnum.Verify;
+      }
       if (res.isHit) {
         return CellStatusEnum.Killed;
       } else {
@@ -44,6 +48,7 @@ export const Cell = ({ index, steps, opponentBoard }: CellProps) => {
       className={clsx(
         s.root,
         cellState === CellStatusEnum.OpponentDefault && s.opponentDefault,
+        cellState === CellStatusEnum.Verify && s.verify,
       )}
       justify="between"
     >

@@ -26,7 +26,7 @@ export const $doLoadGameResult = atom(
     const initData = get($webApp)?.initData;
     if (initData) {
       const response = await httpClient.get<IGameResult>(
-        apiPaths.getGameResult(roomId),
+        apiPaths.game.result(roomId),
         initData,
       );
       if (response.data) {

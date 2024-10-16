@@ -20,12 +20,13 @@ import * as coreModels from "@/app/core/models";
 import { networks } from "@/app/shared/configs/networks";
 
 type LobbySceneProps = {
-  onReload: () => void;
-  onDeleteGame: (roomId: string) => void;
-  onEnterGame: (roomId: string) => void;
   activeGames: IGetActiveGamesRes[];
   userEndedGames: IGetUserEndedGameRes[];
   WebApp: WebApp;
+  nativePrice: number;
+  onReload: () => void;
+  onDeleteGame: (roomId: string) => void;
+  onEnterGame: (roomId: string) => void;
 };
 
 export const LobbyScene = ({
@@ -35,6 +36,7 @@ export const LobbyScene = ({
   activeGames,
   onEnterGame,
   userEndedGames,
+  nativePrice,
 }: LobbySceneProps) => {
   const [gamesTab, setGamesTab] = useState("active");
 
@@ -73,6 +75,7 @@ export const LobbyScene = ({
           activeGames.length ? (
             activeGames.map((el, index) => (
               <Game
+                nativePrice={nativePrice}
                 key={index}
                 webApp={WebApp}
                 game={el}

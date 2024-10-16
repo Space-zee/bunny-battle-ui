@@ -1,29 +1,33 @@
 export const apiPaths = {
-  getUserData(): string {
-    return "/getUserData";
+  user: {
+    data(): string {
+      return "/user/data";
+    },
+    endedGames(): string {
+      return "/user/ended-games";
+    },
   },
-  getActiveGames(): string {
-    return "/getActiveGames";
+  activeGames(): string {
+    return "/active-games";
   },
-  getUserEndedGames(): string {
-    return "/getUserEndedGames";
+  game: {
+    default(): string {
+      return "/game";
+    },
+    data(roomId: string): string {
+      return `/game/data/${roomId}`;
+    },
+    result(roomId: string): string {
+      return `/game/result/${roomId}`;
+    },
+    estimate(): string {
+      return `/game/estimate`;
+    },
   },
-  createGame(): string {
-    return "/createGame";
-  },
-  deleteGame(): string {
-    return "/deleteGame";
+  ethPrice(): string {
+    return "/eth-price";
   },
   withdrawFunds(): string {
-    return "/withdrawFunds";
-  },
-  getGameData(roomId: string): string {
-    return `/getGameData/${roomId}`;
-  },
-  getGameResult(roomId: string): string {
-    return `/getGameResult/${roomId}`;
-  },
-  getEstimatedGasCost(): string {
-    return "/getEstimatedGasCost";
+    return "/withdraw";
   },
 };

@@ -21,6 +21,10 @@
   align-items: center;
 }
 
+.profileTopWrapper{
+  margin-bottom: 16px;
+}
+
 .header {
   font-size: 32px;
   font-weight: 700;
@@ -41,6 +45,7 @@
   border-radius: 16px;
   padding: 8px;
 }
+
 .balanceWrapper {
   display: flex;
   flex-direction: column;
@@ -55,7 +60,7 @@
   color: $primary-white;
 }
 
-.totalBalanceHeader {
+.totalBalanceUsd {
   font-size: 14px;
   font-weight: 500;
   color: $gray-600;

@@ -10,7 +10,7 @@ import { colors } from "@/app/shared/constants";
 import { Loader } from "@/app/components";
 import { Box, Text, Flex } from "@radix-ui/themes";
 import Image from "next/image";
-import { coordinatesToIndex } from "@/app/shared/utils";
+import { coordinatesToIndex, formatValue } from "@/app/shared/utils";
 import { networks } from "@/app/shared/configs/networks";
 import { ChainIdEnum } from "@/app/shared/enums";
 
@@ -24,6 +24,7 @@ export default function GameEndController() {
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [gameResult] = useAtom(gameEndModels.$gameResult);
   const [userData] = useAtom(coreModels.$userData);
+  const [nativePrice] = useAtom(coreModels.$nativePrice);
 
   const $doLoadWebApp = useSetAtom(coreModels.$doLoadWebApp);
   const $doLoadGameResult = useSetAtom(gameEndModels.$doLoadGameResult);
@@ -58,7 +59,8 @@ export default function GameEndController() {
         <Loader />
       ) : (
         <Flex>
-          {userData?.wallet === gameResult.winner ? (
+          {userData?.wallet.toLowerCase() ===
+          gameResult.winner.toLowerCase() ? (
             <Box>
               <Flex
                 direction="column"
@@ -73,7 +75,15 @@ export default function GameEndController() {
               <Box className={s.prizePoolWrapper}>
                 <Text className={s.youGot}>You got</Text>
                 <br />
-                <Text className={s.prizePool}>{gameResult.prize} ETH</Text>
+                <Text className={s.prizePool}>
+                  {gameResult.prize} ETH{" "}
+                  <span className={s.prizeUsd}>
+                    ≈ $
+                    {formatValue(
+                      String(Number(gameResult.prize) * nativePrice),
+                    )}
+                  </span>
+                </Text>
               </Box>
               <Box className={s.gameIdHeader}>
                 <span className={s.gameId}>#{gameResult.gameId}</span>{" "}
@@ -111,7 +121,8 @@ export default function GameEndController() {
           <Box>
             {gameResult.steps.length - 1 === index ? (
               <Text>
-                {userData?.wallet === gameResult.winner
+                {userData?.wallet.toLowerCase() ===
+                gameResult.winner.toLowerCase()
                   ? "🎉 You Win"
                   : "😔 You Lose"}
               </Text>

@@ -15,7 +15,7 @@ export const $doLoadActiveGames = atom(null, async (get, set) => {
   const initData = get($webApp)?.initData;
   if (initData) {
     const response = await httpClient.get<IGetActiveGamesRes[]>(
-      apiPaths.getActiveGames(),
+      apiPaths.activeGames(),
       initData,
     );
     if (response.data) {
@@ -36,7 +36,7 @@ export const $doLoadUserEndedGames = atom(null, async (get, set) => {
 
   if (initData) {
     const response = await httpClient.get<IGetUserEndedGameRes[]>(
-      apiPaths.getUserEndedGames(),
+      apiPaths.user.endedGames(),
       initData,
     );
     if (response.data) {
@@ -59,9 +59,13 @@ export const $doDeleteGame = atom(
     const initData = get($webApp)?.initData;
 
     if (initData) {
-      const response = await httpClient.post(apiPaths.deleteGame(), initData, {
-        roomId,
-      });
+      const response = await httpClient.delete(
+        apiPaths.game.default(),
+        initData,
+        {
+          roomId,
+        },
+      );
       if (response.success) {
       } else {
         set($notification, {

@@ -8,8 +8,10 @@ import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import { TgStorage } from "@/app/shared/utils";
 import { NotificationTitleIcon } from "@/app/shared/enums";
 import { GameGasCost } from "@/app/shared/types/gameGasCost.interface";
+import { $activeGames } from "@/app/(pages)/main/models";
 
 export const $webApp = atom<WebAppTypes | null>(null);
+export const $nativePrice = atom<number>(0);
 export const $tgButtons = atom<TgButtons | null>(null);
 export const $tgStorage = atom<TgStorage | null>(null);
 export const $notification = atom<{
@@ -43,6 +45,19 @@ export const $secondNotification = atom<{
 export const $userData = atom<IUserData | null>(null);
 export const $estimatedGameGasCost = atom<GameGasCost | null>(null);
 
+export const $doLoadEthPrice = atom(null, async (get, set) => {
+  const initData = get($webApp)?.initData;
+  if (initData) {
+    const response = await httpClient.get<number>(
+      apiPaths.ethPrice(),
+      initData,
+    );
+    if (response.data) {
+      set($nativePrice, response.data);
+    }
+  }
+});
+
 export const $doLoadWebApp = atom(null, async (get, set) => {
   const webApp = get($webApp);
   if (!webApp) {
@@ -60,11 +75,12 @@ export const $doLoadUserData = atom(null, async (get, set) => {
   const initData = get($webApp)?.initData;
   if (initData) {
     const response = await httpClient.get<IUserData>(
-      apiPaths.getUserData(),
+      apiPaths.user.data(),
       initData,
     );
     if (response.data) {
       set($userData, response.data);
+      await set($doLoadEthPrice);
     } else {
       set($notification, {
         titleIcon: NotificationTitleIcon.Error,
@@ -80,7 +96,7 @@ export const $doLoadEstimatedGameGasCost = atom(null, async (get, set) => {
   const initData = get($webApp)?.initData;
   if (initData) {
     const response = await httpClient.get<GameGasCost>(
-      apiPaths.getEstimatedGasCost(),
+      apiPaths.game.estimate(),
       initData,
     );
     if (response.data) {

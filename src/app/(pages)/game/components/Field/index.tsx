@@ -1,8 +1,8 @@
 import s from "./style.module.scss";
 import { Grid } from "@radix-ui/themes";
 import { Cell } from "./Cell";
-import { IGame } from "@/app/(pages)/game/models";
 import clsx from "clsx";
+import { IGame } from "@/app/shared/types";
 
 type FieldProps = {
   game: IGame;

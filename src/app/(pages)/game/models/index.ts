@@ -1,35 +1,11 @@
 import { atom } from "jotai/index";
-import { ICoordinates, ICoordinatesWithHit } from "@/app/shared/types";
+import { ICoordinates, ICoordinatesWithHit, IGame } from "@/app/shared/types";
 import { httpClient } from "@/app/core/httpClient";
 import { apiPaths } from "@/app/core/httpClient/apiPaths";
 import * as coreModels from "@/app/core/models";
-import { NotificationTitleIcon } from "@/app/shared/enums";
+import { GameStatusEnum, NotificationTitleIcon } from "@/app/shared/enums";
 import { $notification, $webApp } from "@/app/core/models";
 import { storageKeys } from "@/app/shared/constants";
-export enum GameStatusEnum {
-  RabbitsSet = "rabbitsSet",
-  UserTurn = "userTurn",
-  OpponentTurn = "opponentTurn",
-}
-
-export interface IGame {
-  isDisableField: boolean;
-  gameId: number;
-  moveDeadline: number;
-  isScCreated: boolean;
-  status?: GameStatusEnum;
-  isCreator?: boolean;
-  bet?: string;
-  myRabbits: ICoordinates[];
-  steps: ICoordinatesWithHit[];
-  currentStep?: ICoordinates;
-  opponent: {
-    isInRoom: boolean;
-    steps: ICoordinatesWithHit[];
-    userName?: string;
-    photo?: string;
-  };
-}
 
 export const $game = atom<IGame>({
   moveDeadline: 0,
@@ -67,7 +43,7 @@ export const $doLoadGameData = atom(
     const initData = get($webApp)?.initData;
     if (initData) {
       const response = await httpClient.get<ILoadGameData>(
-        apiPaths.getGameData(roomId),
+        apiPaths.game.data(roomId),
         initData,
       );
       if (response.data) {

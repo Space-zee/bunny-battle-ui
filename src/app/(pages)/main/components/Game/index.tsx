@@ -7,13 +7,14 @@ import Image from "next/image";
 import { RoomStatusServerEnum } from "@/app/shared/enums";
 import { Avatar, MaximizeIcon } from "@/app/components";
 import React from "react";
-import { formatBalance, getUsernameStr } from "@/app/shared/utils";
+import { formatBalance, formatValue, getUsernameStr } from "@/app/shared/utils";
 
 type GameProps = {
   game: IGetActiveGamesRes;
+  webApp: WebApp;
+  nativePrice: number;
   onEnterGame: () => void;
   onDeleteGame: () => void;
-  webApp: WebApp;
 };
 
 export const Game = ({
@@ -21,6 +22,7 @@ export const Game = ({
   onEnterGame,
   onDeleteGame,
   webApp,
+  nativePrice,
 }: GameProps) => {
   const isUserGame =
     webApp.initDataUnsafe.user?.id === game.creator.telegramUserId;
@@ -98,7 +100,12 @@ export const Game = ({
           </Flex>
         )}
         <Flex align="center">
-          <Text className={s.bet}>{formatBalance(Number(game.bet))} ETH</Text>
+          <Flex direction="column" align="end">
+            <Text className={s.bet}>{formatBalance(Number(game.bet))} ETH</Text>
+            <Text className={s.betInUsd}>
+              ${formatValue((Number(game.bet) * nativePrice).toString())}
+            </Text>
+          </Flex>
           {isUserGameStarted ? (
             ""
           ) : isUserGame ? (

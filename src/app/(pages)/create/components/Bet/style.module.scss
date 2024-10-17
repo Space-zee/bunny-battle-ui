@@ -1,7 +1,7 @@
 @import "@/styles/variables";
 
 .root {
-  height: 46px;
+  height: auto;
   background: $gray-900;
   width: 100%;
   padding: 4px;
@@ -22,4 +22,10 @@
 .amount {
   font-size: 16px;
   font-weight: 600;
+}
+
+.usdAmount{
+  font-size: 14px;
+  font-weight: 600;
+  color: $gray-400;
 }

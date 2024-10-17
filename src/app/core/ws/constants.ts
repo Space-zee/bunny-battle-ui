@@ -1,4 +1,5 @@
 export enum SocketEvents {
+  //Game
   JoinRoomClient = "joinRoomClient",
   JoinRoomServer = "joinRoomServer",
   ReadyForBattle = "readyForBattle",
@@ -15,4 +16,7 @@ export enum SocketEvents {
   LeaveRoomServer = "leaveRoomServer",
   TxFailed = "txFailed",
   AuthError = "authError",
+  //Global
+  NewGameCreated = "newGameCreated",
+  GameDeleted = "gameDeleted",
 }

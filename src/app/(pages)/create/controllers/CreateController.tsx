@@ -29,6 +29,7 @@ export default function CreateController() {
 
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [userData] = useAtom(coreModels.$userData);
+  const [nativePrice] = useAtom(coreModels.$nativePrice);
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
 
   const [, setNotification] = useAtom(coreModels.$notification);
@@ -45,8 +46,10 @@ export default function CreateController() {
     validateBet(value);
   };
   const onConfirm = async () => {
+    TgButtons?.mainButton.showProgress();
     const res = await $doCreateGame({ bet: Number(bet).toFixed(5) });
     if (res && res.success) {
+      TgButtons?.mainButton.hideProgress();
       router.push(`/game/${res.data?.roomId}`);
     }
   };
@@ -149,7 +152,12 @@ export default function CreateController() {
         <Text className={s.whiteHeader}>Or use presets</Text>
         <Flex className={s.presetsWrapper}>
           {PRESETS.map((el) => (
-            <Bet key={el} amount={el} onClick={() => validateBet(el)} />
+            <Bet
+              key={el}
+              amount={el}
+              nativePrice={nativePrice}
+              onClick={() => validateBet(el)}
+            />
           ))}
         </Flex>
       </Box>

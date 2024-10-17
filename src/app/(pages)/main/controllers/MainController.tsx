@@ -16,7 +16,11 @@ import {
 import { BottomNav } from "@/app/(pages)/main/components/BottomNav";
 import { NavItemEnum } from "@/app/(pages)/main/enums";
 import copy from "copy-text-to-clipboard";
-import { NotificationTitleIcon } from "@/app/shared/enums";
+import { GameStatusEnum, NotificationTitleIcon } from "@/app/shared/enums";
+import { socket } from "@/app/core/ws/socket";
+import { SocketEvents } from "@/app/core/ws/constants";
+import { IGetActiveGamesRes } from "@/app/shared/types";
+import { Button } from "@radix-ui/themes";
 
 export default function MainController() {
   const router = useRouter();
@@ -29,7 +33,7 @@ export default function MainController() {
   const [TgButtons] = useAtom(coreModels.$tgButtons);
   const [userData] = useAtom(coreModels.$userData);
   const [nativePrice] = useAtom(coreModels.$nativePrice);
-  const [activeGames] = useAtom(gamesModels.$activeGames);
+  const [activeGames, setActiveGames] = useAtom(gamesModels.$activeGames);
   const [userEndedGames] = useAtom(gamesModels.$userEndedGames);
   const [estimatedGameGasCost] = useAtom(coreModels.$estimatedGameGasCost);
 
@@ -94,6 +98,27 @@ export default function MainController() {
     $doLoadActiveGames();
     $doLoadUserEndedGames();
     $doLoadEstimatedGameGasCost();
+  }, []);
+
+  const onNewGameCreated = (game: IGetActiveGamesRes) => {
+    setActiveGames((prev) => [...prev, game]);
+  };
+
+  const onGameDeleted = (roomId: string) => {
+    const filteredGames: IGetActiveGamesRes[] = activeGames.filter(
+      (el) => el.roomId !== roomId,
+    );
+    setActiveGames(filteredGames);
+  };
+
+  useEffect(() => {
+    socket.on(`${SocketEvents.NewGameCreated}`, onNewGameCreated);
+    socket.on(`${SocketEvents.GameDeleted}`, onGameDeleted);
+
+    return () => {
+      socket.off(`${SocketEvents.NewGameCreated}`, onNewGameCreated);
+      socket.off(`${SocketEvents.GameDeleted}`, onGameDeleted);
+    };
   }, []);
 
   const onReloadLobby = async () => {

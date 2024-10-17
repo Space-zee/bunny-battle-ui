@@ -15,7 +15,14 @@ export const EndedGame = ({ endedGame, onLinkClick }: EndedGameProps) => {
   return (
     <Flex className={clsx(s.root)} direction="column" align="start">
       <Flex justify="between" className={clsx(s.userWrapper, s.loser)}>
-        <Text>@{endedGame.loser.username}</Text>
+        <Flex align="center">
+          <Text>@{endedGame.loser.username}</Text>
+          {endedGame.loser.firstMove && (
+            <Flex align="center" justify="center" className={s.firstMove}>
+              1 mover
+            </Flex>
+          )}
+        </Flex>
         <Text className={s.loserEth}>
           -{formatBalance(Number(endedGame.bet))} ETH
         </Text>
@@ -24,7 +31,14 @@ export const EndedGame = ({ endedGame, onLinkClick }: EndedGameProps) => {
         ⚔ <Text className={s.roomId}>#{endedGame.roomId}</Text>
       </Box>
       <Flex justify="between" className={clsx(s.userWrapper, s.winner)}>
-        <Text>🏆 @{endedGame.winner.username}</Text>
+        <Flex align="center">
+          <Text>🏆 @{endedGame.winner.username}</Text>
+          {endedGame.winner.firstMove && (
+            <Flex align="center" justify="center" className={s.firstMove}>
+              1 mover
+            </Flex>
+          )}
+        </Flex>
         <Text onClick={onLinkClick} className={s.winnerEth}>
           +{prizePool} ETH
         </Text>

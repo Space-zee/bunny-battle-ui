@@ -16,11 +16,10 @@ import {
 import { BottomNav } from "@/app/(pages)/main/components/BottomNav";
 import { NavItemEnum } from "@/app/(pages)/main/enums";
 import copy from "copy-text-to-clipboard";
-import { GameStatusEnum, NotificationTitleIcon } from "@/app/shared/enums";
+import { NotificationTitleIcon } from "@/app/shared/enums";
 import { socket } from "@/app/core/ws/socket";
 import { SocketEvents } from "@/app/core/ws/constants";
 import { IGetActiveGamesRes } from "@/app/shared/types";
-import { Button } from "@radix-ui/themes";
 
 export default function MainController() {
   const router = useRouter();
@@ -119,7 +118,7 @@ export default function MainController() {
       socket.off(`${SocketEvents.NewGameCreated}`, onNewGameCreated);
       socket.off(`${SocketEvents.GameDeleted}`, onGameDeleted);
     };
-  }, []);
+  }, [socket]);
 
   const onReloadLobby = async () => {
     await $doLoadActiveGames();

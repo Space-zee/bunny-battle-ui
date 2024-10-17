@@ -118,7 +118,7 @@ export default function MainController() {
       socket.off(`${SocketEvents.NewGameCreated}`, onNewGameCreated);
       socket.off(`${SocketEvents.GameDeleted}`, onGameDeleted);
     };
-  }, [socket]);
+  }, []);
 
   const onReloadLobby = async () => {
     await $doLoadActiveGames();
